@@ -13,10 +13,21 @@ public class TextProcessor {
 //				value: freq_of_occur
 	
 	// doc_num is the number as the user would see it; ie. it's 1-based index
+	// if doc_num is 0, find the sum in all docs
 	public int FindFrequencyByDocument(String word, int doc_num) {
-		doc_num -= 1;
 		int[] freq = index.get(word);
-		return freq[doc_num];
+		if (freq == null) return 0;			// word not found
+		
+		if (doc_num > 0) {
+			doc_num -= 1;
+			return freq[doc_num];
+		}
+		else if (doc_num == 0) {
+			int sum = 0;
+			for (int i = 0; i < freq.length; i++) sum += freq[i];
+			return sum;
+		}
+		else return 0;
 	}
 	
 	public void TestIndex() {
