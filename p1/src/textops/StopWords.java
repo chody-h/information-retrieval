@@ -44,8 +44,13 @@ public class StopWords {
 			e.printStackTrace();
 		}
 	}
-	public HashSet<String> getStopWords(){return StopWords;}
-	public void setStopWord(HashSet<String> words){StopWords=words;}
+	public HashSet<String> getStopWords(){
+		return StopWords;
+	}
+	
+	public void setStopWord(HashSet<String> words){
+		StopWords=words;
+	}
 	
 	public boolean contains(String word){
 		return StopWords.contains(word.toLowerCase().trim());
