@@ -1,0 +1,441 @@
+==================
+You searched for:  killing incident
+From:  Doc (13).txt
+Summary:  FIVE IRISH tourists charged in connection with an alleged air-rage incident will face trial at a Crown Court.
+Score:  4.330917
+
+From:  Doc (106).txt
+Summary:  A CONVICTED sex attacker who was cleared of killing and mutilating a prostitute six years ago was jailed for life at the Old Bailey yesterday for murdering another woman..
+Score:  2.549557
+
+From:  Doc (33).txt
+Summary:  A drifter who killed three friends was jailed for life at Reading Crown Court.
+Score:  2.549557
+
+From:  Doc (32).txt
+Summary:  DRUG-CRAZED axeman Alan Hobbs who butchered three friends in a 24-hour frenzy was jailed for life yesterday..
+Score:  2.185335
+
+From:  Doc (12).txt
+Summary:  FIVE Irish tourists charged in connection with an alleged air rage incident which led to a Jamaica-bound plane being diverted to the US have been committed for trial at Chichester Crown Court.
+Score:  2.165458
+
+From:  Doc (101).txt
+Summary:  A BRUTAL sex monster dubbed by police a modern Jack the Ripper was jailed for life yesterday.
+Score:  2.039646
+
+From:  Doc (26).txt
+Summary:  Police officers beat up a man in an "outrageous" display of brutality, then lied about the incident on oath, the old Bailey heard yesterday..
+Score:  1.924852
+
+From:  Doc (28).txt
+Summary:   AN AXE monster who slaughtered a charity worker and her two lovers in scenes of 'unimaginable savagery' was jailed for life yesterday..
+Score:  1.752821
+
+From:  Doc (143).txt
+Summary:  A GANG who terrorised a student before throwing him into a river where he drowned were convicted of his killing yesterday.
+Score:  1.699705
+
+From:  Doc (93).txt
+Summary:  NAZI nailbomber David Copeland had a death wish from the age of 14, a court heard yesterday..
+Score:  1.699705
+
+Debug:  kill incid 
+------------------
+==================
+You searched for:  suspect charged with murder
+From:  Doc (85).txt
+Summary:   Thomas AlIsop, 45, of Ludlow Square in north Belfast, appeared in court yesterday charged with the murder of Mr Bennett.
+Score:  4.771950
+
+From:  Doc (49).txt
+Summary:  THE MOTHER of a four-month-old girl whose body was found in a canal has been charged with her baby's murder.
+Score:  4.771950
+
+From:  Doc (47).txt
+Summary:  ROBINA Hashim, 29, was remanded in custody by Burnley, Lancs, JPs yesterday charged with murdering her baby daughter..
+Score:  4.771950
+
+From:  Doc (45).txt
+Summary:  A FATHER, already in jail for attacking his son, received a life sentence for murder yesterday because the toddler died 16 months after the assault.
+Score:  3.181300
+
+From:  Doc (151).txt
+Summary:  John Stratford, 28, an Army sergeant from Wavertree, Liverpool, appeared before magistrates in Hexham, Northumberland, charged with six counts of common assault on cadets at a training camp and possessing an offensive weapon.
+Score:  2.549557
+
+From:  Doc (77).txt
+Summary:  Ian Beckett, 52, the Deputy Chief Constable of Surrey Police, has been remanded by London magistrates on four charges of indecent assault against two women at the Mount Browne headquarters..
+Score:  2.549557
+
+From:  Doc (75).txt
+Summary:  THE Deputy Chief Constable of Surrey was in court yesterday charged with four sex attacks..
+Score:  2.549557
+
+From:  Doc (13).txt
+Summary:  FIVE IRISH tourists charged in connection with an alleged air-rage incident will face trial at a Crown Court.
+Score:  2.549557
+
+From:  Doc (12).txt
+Summary:  FIVE Irish tourists charged in connection with an alleged air rage incident which led to a Jamaica-bound plane being diverted to the US have been committed for trial at Chichester Crown Court.
+Score:  2.549557
+
+From:  Doc (11).txt
+Summary:  An executive accused of having sex with a stranger on board an American Airlines flight from Dallas to Manchester last October was sent for trial on April 3. David Machin, 40, of Wakefield, Yorkshire, is charged with outraging public decency..
+Score:  2.549557
+
+Debug:  suspect charg murder 
+------------------
+==================
+You searched for:  court
+From:  Doc (165).txt
+Summary:  JUDGES yesterday saved the NHS from being "bankrupted" by �1bn-a-year nursing home fees.
+Score:  1.365133
+
+From:  Doc (155).txt
+Summary:  Maurice Travis, 19, was jailed for life at Wolverhampton Crown Court for stabbing Alan Averall to death on his 17th birthday after being refused cake at Stoke Heath Young Offenders' Institute..
+Score:  1.365133
+
+From:  Doc (149).txt
+Summary:  A WOMAN doctor who set up a brothel to pay the bills was jailed for three months yesterday..
+Score:  1.365133
+
+From:  Doc (144).txt
+Summary:  Three men found guilty of murdering 18-year-old student Jonathan Coles, who was thrown into a river after leaving a Milton Keynes club, were facing life sentences last night.
+Score:  1.365133
+
+From:  Doc (127).txt
+Summary:  THE TRIAL of a 13-year-old youth accused of killing a boy of nine by setting his petrol-soaked clothes alight collapsed yesterdaywhen the judge ruled that theteenager could not understand the proceedings..
+Score:  1.365133
+
+From:  Doc (113).txt
+Summary:  Two Egyptians appeared at Bow Street magistrates' court yesterday in connectionwith the bombings last year of two American embassies in Africa..
+Score:  1.365133
+
+From:  Doc (110).txt
+Summary:  TWO Egyptians appeared in court yesterday in London in connection with the bombing of two American embassies in Africa..
+Score:  1.365133
+
+From:  Doc (85).txt
+Summary:   Thomas AlIsop, 45, of Ludlow Square in north Belfast, appeared in court yesterday charged with the murder of Mr Bennett.
+Score:  1.365133
+
+From:  Doc (75).txt
+Summary:  THE Deputy Chief Constable of Surrey was in court yesterday charged with four sex attacks..
+Score:  1.365133
+
+From:  Doc (52).txt
+Summary:  TODDLER Molly Adams was killed by her 12-year-old babysitter, a court heard yesterday.
+Score:  1.365133
+
+Debug:  court 
+------------------
+==================
+You searched for:  jury sentenced murderer to prison
+From:  Doc (144).txt
+Summary:  Three men found guilty of murdering 18-year-old student Jonathan Coles, who was thrown into a river after leaving a Milton Keynes club, were facing life sentences last night.
+Score:  5.029747
+
+From:  Doc (99).txt
+Summary:  THE father of a young mum butchered by a 19st sex monster last night blasted the legal system for allowing the fiend to remain free for 23 years.
+Score:  4.966039
+
+From:  Doc (4).txt
+Summary:  Two key workers at a children's home were sentenced yesterday to a total of 23 years in prison for a string of sexual assaults on boys in their care..
+Score:  4.848850
+
+From:  Doc (138).txt
+Summary:  A FORMER double-glazing salesman received two life sentences yesterday for the murders of a prize-winning dog breeder and her elderly mother at their isolated farmhouse.
+Score:  4.556368
+
+From:  Doc (51).txt
+Summary:  An 18-year-old won the backing of a high court judge yesterday to keep her new-born baby with her in prison.
+Score:  4.082989
+
+From:  Doc (50).txt
+Summary:  A TEENAGE woman prisoner was supported by a High Court judge yesterday in her battle to keep her new-born baby with her in jail..
+Score:  3.870384
+
+From:  Doc (107).txt
+Summary:  A SEX offender who boasted in prison that he had got away with killing one woman and had murdered several others was yesterday jailed for life for murdering a young mother whose mutilated body was found in a shallow grave in Surrey..
+Score:  3.517400
+
+From:  Doc (143).txt
+Summary:  A GANG who terrorised a student before throwing him into a river where he drowned were convicted of his killing yesterday.
+Score:  3.457868
+
+From:  Doc (121).txt
+Summary:  A MAN accused of murdering British postman Brian Hagland at Sydney's Bondi Beach was cleared yesterday..
+Score:  3.295240
+
+From:  Doc (44).txt
+Summary:  BABY killer Sally Clarke protested her innocence yesterday from her prison cell..
+Score:  3.058550
+
+Debug:  juri sentenc murder prison 
+------------------
+==================
+You searched for:  movie
+From:  Doc (320).txt
+Summary:  BRIDE-TO-be Catherine Zeta Jones was celebrating again yesterday after signing a multi million-pound deal to make up to 12 movies.
+Score:  3.687061
+
+From:  Doc (205).txt
+Summary:  LIZ HURLEY basked in reflected glory at the London premier of her new movie Mickey Blue Eyes last night.
+Score:  3.687061
+
+From:  Doc (319).txt
+Summary:  STUNNING Catherine Zeta Jones has signed a �250million deal to make Hollywood movies, it was revealed last night..
+Score:  2.458040
+
+From:  Doc (115).txt
+Summary:  JAMES Bond star Pierce Brosnan plants a kiss on fiancee Keely Shaye-Smith at last night's British premiere of his new 007 movie.
+Score:  2.212236
+
+From:  Doc (312).txt
+Summary:  THOMAS The Tank Engine is being made into a blockbuster movie..
+Score:  1.843530
+
+From:  Doc (275).txt
+Summary:  ALL Saint Nicole Appleton is to go topless in her movie debut, according to her big sister Natalie..
+Score:  1.843530
+
+From:  Doc (183).txt
+Summary:  WHILE Kate is canoodling in Thailand, her tramp-like ox Johnny Depp is in London for the opening of his new film Sleepy Hollow..
+Score:  1.843530
+
+From:  Doc (86).txt
+Summary:  SKY Television has scooped the rights to screen the Blackadder movie before the BBC..
+Score:  1.843530
+
+From:  Doc (117).txt
+Summary:  IN true 007 style, Pierce Brosnan found himself surrounded by beautiful women at the European premiere of the 19th James Bond film in London last night.
+Score:  1.474824
+
+From:  Doc (114).txt
+Summary:  HERE'S Pierce Brosnan with the hottest trio of Bond girls ever at last night's UK premiere of The World Is Not Enough..
+Score:  1.474824
+
+Debug:  movi 
+------------------
+==================
+You searched for:  entertainment films
+From:  Doc (322).txt
+Summary:  WHILE much of the world's press worried yesterday about whether Catherine Zeta-Jones would sign a pre-nuptial agreement to stop her getting her hands on Michael Douglas's fortune, the Welsh actress was quietly making herself and her family richer without recourse to her fianc�'s wealth..
+Score:  4.006455
+
+From:  Doc (319).txt
+Summary:  STUNNING Catherine Zeta Jones has signed a �250million deal to make Hollywood movies, it was revealed last night..
+Score:  3.531135
+
+From:  Doc (321).txt
+Summary:  WELSH actress Catherine Zeta Jones is on her way to becoming a movie mogul..
+Score:  2.716207
+
+From:  Doc (320).txt
+Summary:  BRIDE-TO-be Catherine Zeta Jones was celebrating again yesterday after signing a multi million-pound deal to make up to 12 movies.
+Score:  2.716207
+
+From:  Doc (295).txt
+Summary:  The most hyped film ever limped into London last night for a premiere which could only muster a gathering of C-list celebrities..
+Score:  2.716207
+
+From:  Doc (294).txt
+Summary:  SIX thousand fans squeezed into London's Leicester Square last night to cheer the stars as the Prince of Wales arrived for the royal premiere of the latest Star Wars film, The Phantom Menace..
+Score:  2.716207
+
+From:  Doc (293).txt
+Summary:  AS THE boy who grows up into he most evil man in the universe, the young Darth Vader fears little and respects even less..
+Score:  2.716207
+
+From:  Doc (292).txt
+Summary:  THEIR arrival was enough to ensure eyes were wide open on both sides of the Atlantic..
+Score:  2.716207
+
+From:  Doc (290).txt
+Summary:  AFTER months of hype, Star Wars: The Phantom Menace had its royal premiere last night - and my fears came true..
+Score:  2.716207
+
+From:  Doc (289).txt
+Summary:  THE new Star Wars movie got its Royal premiere last night - as a galaxy of stars flocked to see it with Prince Charles..
+Score:  2.716207
+
+Debug:  entertain film 
+------------------
+==================
+You searched for:  court appeal won by accused
+From:  Doc (127).txt
+Summary:  THE TRIAL of a 13-year-old youth accused of killing a boy of nine by setting his petrol-soaked clothes alight collapsed yesterdaywhen the judge ruled that theteenager could not understand the proceedings..
+Score:  4.718197
+
+From:  Doc (75).txt
+Summary:  THE Deputy Chief Constable of Surrey was in court yesterday charged with four sex attacks..
+Score:  4.566766
+
+From:  Doc (165).txt
+Summary:  JUDGES yesterday saved the NHS from being "bankrupted" by �1bn-a-year nursing home fees.
+Score:  3.268810
+
+From:  Doc (11).txt
+Summary:  An executive accused of having sex with a stranger on board an American Airlines flight from Dallas to Manchester last October was sent for trial on April 3. David Machin, 40, of Wakefield, Yorkshire, is charged with outraging public decency..
+Score:  3.201634
+
+From:  Doc (80).txt
+Summary:  ONE of Britain's top police officers appeared in court yesterday accused of a series of sex assaults on two civilian staff.
+Score:  3.044511
+
+From:  Doc (148).txt
+Summary:  Three unnamed inmates from Broadmoor top security hospital won a judicial review of restrictions there and at three other special hospitals on visits from their children, which are now permitted only in the presence of the child's carer.
+Score:  2.555543
+
+From:  Doc (51).txt
+Summary:  An 18-year-old won the backing of a high court judge yesterday to keep her new-born baby with her in prison.
+Score:  2.555543
+
+From:  Doc (19).txt
+Summary:  A NURSE yesterday won �157,000 damages after she contracted asthma through using hospital equipment.
+Score:  2.497303
+
+From:  Doc (9).txt
+Summary:  A BUSINESSMAN accused of a mid-air sex act with a stranger on an airliner was yesterday sent for trial by Manchester magistrates charged with outraging public decency and being drunk on the American Airlines plane last October.
+Score:  2.283383
+
+From:  Doc (164).txt
+Summary:  A CRASH victim yesterday won a court victory which could help tens of thousands of other people in nursing homes..
+Score:  2.056715
+
+Debug:  court appeal won accus 
+------------------
+==================
+You searched for:  action film producer
+From:  Doc (321).txt
+Summary:  WELSH actress Catherine Zeta Jones is on her way to becoming a movie mogul..
+Score:  5.100227
+
+From:  Doc (184).txt
+Summary:  JOHNNY Depp looks like he's dropping a hint to any producer thinking of making a film about Che Guevara..
+Score:  4.504222
+
+From:  Doc (118).txt
+Summary:  007 WAS back in action last night for the British premiere of The World Is Not Enough at Leicester Square, London..
+Score:  4.493179
+
+From:  Doc (302).txt
+Summary:  SAEED JAFFREY has been 'rested indefinitely' by Coronation Street's producers weeks after being arrested for drunken behaviour on a train..
+Score:  4.194824
+
+From:  Doc (69).txt
+Summary:  DAWN FRENCH and Jennifer Saunders are to star in a new sitcom together.
+Score:  3.799796
+
+From:  Doc (205).txt
+Summary:  LIZ HURLEY basked in reflected glory at the London premier of her new movie Mickey Blue Eyes last night.
+Score:  3.576029
+
+From:  Doc (72).txt
+Summary:  THE BESIEGED BBC1 controller, Peter Salmon, came out fighting with an attack on the BBC's commercial rivals yesterday as he launched his channel's crucial autumn line-up..
+Score:  3.564987
+
+From:  Doc (207).txt
+Summary:  ELIZABETH Hurley appeared in another revealing Versace dress last night for the world premiere of Mickey Blue Eyes, the new film starring her boyfriend Hugh Grant..
+Score:  3.431413
+
+From:  Doc (319).txt
+Summary:  STUNNING Catherine Zeta Jones has signed a �250million deal to make Hollywood movies, it was revealed last night..
+Score:  3.002814
+
+From:  Doc (322).txt
+Summary:  WHILE much of the world's press worried yesterday about whether Catherine Zeta-Jones would sign a pre-nuptial agreement to stop her getting her hands on Michael Douglas's fortune, the Welsh actress was quietly making herself and her family richer without recourse to her fianc�'s wealth..
+Score:  2.716207
+
+Debug:  action film produc 
+------------------
+==================
+You searched for:  drunk driving accusations
+From:  Doc (181).txt
+Summary:  THE presenter of Top Gear, Brendan Coogan, has lost his job because of a drink-drive conviction..
+Score:  4.630477
+
+From:  Doc (179).txt
+Summary:  TOP Gear TV presenter Brendan Coogan has quit his "dream job" after being convicted of drink-driving.
+Score:  4.630477
+
+From:  Doc (9).txt
+Summary:  A BUSINESSMAN accused of a mid-air sex act with a stranger on an airliner was yesterday sent for trial by Manchester magistrates charged with outraging public decency and being drunk on the American Airlines plane last October.
+Score:  3.973794
+
+From:  Doc (75).txt
+Summary:  THE Deputy Chief Constable of Surrey was in court yesterday charged with four sex attacks..
+Score:  3.201634
+
+From:  Doc (11).txt
+Summary:  An executive accused of having sex with a stranger on board an American Airlines flight from Dallas to Manchester last October was sent for trial on April 3. David Machin, 40, of Wakefield, Yorkshire, is charged with outraging public decency..
+Score:  3.201634
+
+From:  Doc (98).txt
+Summary:  A Texan millionaire was last night jailed for 85 years after being convicted of a high speed drink-drive boat crash off Florida which claimed the life of a British yacht captain and his five passengers.
+Score:  3.086985
+
+From:  Doc (10).txt
+Summary:  A BUSINESSMAN accused of indulging in a passionate clinch with a woman stranger on a transatlantic flight was sent for trial when he appeared in court yesterday..
+Score:  2.649196
+
+From:  Doc (127).txt
+Summary:  THE TRIAL of a 13-year-old youth accused of killing a boy of nine by setting his petrol-soaked clothes alight collapsed yesterdaywhen the judge ruled that theteenager could not understand the proceedings..
+Score:  2.401225
+
+From:  Doc (80).txt
+Summary:  ONE of Britain's top police officers appeared in court yesterday accused of a series of sex assaults on two civilian staff.
+Score:  2.134423
+
+From:  Doc (78).txt
+Summary:  The Deputy Chief Constable of Surrey appeared before magistrates yesterday accused of indecently assaulting two female civilian workers..
+Score:  1.600817
+
+Debug:  drunk drive accus 
+------------------
+==================
+You searched for:  actor appeared in movie premiere
+From:  Doc (205).txt
+Summary:  LIZ HURLEY basked in reflected glory at the London premier of her new movie Mickey Blue Eyes last night.
+Score:  7.263090
+
+From:  Doc (279).txt
+Summary:  SIMPSONS mania is to hit Britain with a stage show featuring the "real" stars.
+Score:  3.807355
+
+From:  Doc (300).txt
+Summary:  ACTOR Saeed Jaffrey is being axed from Coronation Street weeks after his arrest for being drunk on a train..
+Score:  3.730201
+
+From:  Doc (320).txt
+Summary:  BRIDE-TO-be Catherine Zeta Jones was celebrating again yesterday after signing a multi million-pound deal to make up to 12 movies.
+Score:  3.687061
+
+From:  Doc (86).txt
+Summary:  SKY Television has scooped the rights to screen the Blackadder movie before the BBC..
+Score:  3.631545
+
+From:  Doc (290).txt
+Summary:  AFTER months of hype, Star Wars: The Phantom Menace had its royal premiere last night - and my fears came true..
+Score:  3.613040
+
+From:  Doc (206).txt
+Summary:  IT WASN'T quite as outrageous as That Dress, the barely believable gown (with the emphasis on barely) that made her an overnight sensation five years ago..
+Score:  3.613040
+
+From:  Doc (293).txt
+Summary:  AS THE boy who grows up into he most evil man in the universe, the young Darth Vader fears little and respects even less..
+Score:  3.509274
+
+From:  Doc (303).txt
+Summary:  INDIAN actor Saeed Jaffrey hit out last night after being sacked from Coronation Street.
+Score:  3.263447
+
+From:  Doc (183).txt
+Summary:  WHILE Kate is canoodling in Thailand, her tramp-like ox Johnny Depp is in London for the opening of his new film Sleepy Hollow..
+Score:  3.055543
+
+Debug:  actor appear movi premier 
+------------------
+
