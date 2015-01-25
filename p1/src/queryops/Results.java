@@ -19,7 +19,7 @@ public class Results {
 		this.tp = tp;
 		
 		for (int i = 0; i < scores.length; i++) {
-			if (scores[i] >= top_scores[9]) {
+			if (scores[i] > top_scores[9] || doc_ids[9] == 0) {
 				BubbleUp(i, scores[i]);
 			}
 		}
@@ -27,7 +27,7 @@ public class Results {
 	
 	private void BubbleUp(int doc_id, double score) {
 		int i = 9;
-		while (i >= 0 && score >= top_scores[i]) {
+		while (i >= 0 && (score > top_scores[i] || doc_ids[i] == 0)) {
 			if (i != 9) {
 				doc_ids[i+1] = doc_ids[i];
 				first_sentences[i+1] = first_sentences[i];

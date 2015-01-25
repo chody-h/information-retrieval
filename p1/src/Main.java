@@ -28,6 +28,9 @@ public class Main {
 			queries[7] = "action film producer";
 			queries[8] = "drunk driving accusations";
 			queries[9] = "actor appeared in movie premiere";
+		
+//			queries[0] = "James Bond Actors";
+			
 		String[] stemmed = new String[10];
 		Results[] results = new Results[10];
 			

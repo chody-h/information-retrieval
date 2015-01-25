@@ -34,7 +34,7 @@ public class QueryProcessor {
 		int C = NUM_DOCS_TO_PROCESS;
 		for (int i = 0; i < result_scores.length; i++) {
 			double score = 0;
-			int B = max_f[i];
+			int B = max_f[i];											// if (i==199) System.out.println(B);
 			for (int j = 0; j < q.length; j++) {
 				if (q[j] == null) continue;
 				

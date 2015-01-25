@@ -1,0 +1,43 @@
+==================
+You searched for:  James Bond Actors
+From:  Doc (118).txt
+Summary:  007 WAS back in action last night for the British premiere of The World Is Not Enough at Leicester Square, London..
+Score:  6.405048
+
+From:  Doc (116).txt
+Summary:  YOU read about James Bond first in the Daily Express.
+Score:  6.353937
+
+From:  Doc (115).txt
+Summary:  JAMES Bond star Pierce Brosnan plants a kiss on fiancee Keely Shaye-Smith at last night's British premiere of his new 007 movie.
+Score:  6.280108
+
+From:  Doc (117).txt
+Summary:  IN true 007 style, Pierce Brosnan found himself surrounded by beautiful women at the European premiere of the 19th James Bond film in London last night.
+Score:  6.280108
+
+From:  Doc (232).txt
+Summary:  James Brown to sing on the BBC's millennium single It's Only Rock 'n' Roll - the Stones classic..
+Score:  4.745954
+
+From:  Doc (279).txt
+Summary:  SIMPSONS mania is to hit Britain with a stage show featuring the "real" stars.
+Score:  3.807355
+
+From:  Doc (303).txt
+Summary:  INDIAN actor Saeed Jaffrey hit out last night after being sacked from Coronation Street.
+Score:  3.263447
+
+From:  Doc (114).txt
+Summary:  HERE'S Pierce Brosnan with the hottest trio of Bond girls ever at last night's UK premiere of The World Is Not Enough..
+Score:  2.893838
+
+From:  Doc (302).txt
+Summary:  SAEED JAFFREY has been 'rested indefinitely' by Coronation Street's producers weeks after being arrested for drunken behaviour on a train..
+Score:  2.115197
+
+From:  Doc (200).txt
+Summary:  EASTENDERS star Craig Fairbrass quit the series because he reckoned his hardman character was starting to look like a "ballet dancer". The actor, whose character Dan Sullivan departs next week, told Now magazine that at first he loved playing the rat who two-timed Carol Jackson with her daughter Bianca.
+Score:  1.903677
+
+Debug:  jame bond actor 
