@@ -29,10 +29,19 @@ public class Main {
 			queries[8] = "drunk driving accusations";
 			queries[9] = "actor appeared in movie premiere";
 		String[] stemmed = new String[10];
+		String[] results = new String[10];
 			
-		for (int i = 0; i < queries.length; i++) {
-			stemmed[i] = qp.StemQuery(queries[i]);
-			System.out.println(queries[i] + "\n  " + stemmed[i]);
+		for (int i = 0; i < 1; i++) {
+//			String[] temp = qp.StemQuery(queries[i]);
+//			StringBuilder sb = new StringBuilder();
+//			for (int j = 0; j < temp.length; j++) {
+//				if (temp[j] != null) sb.append(temp[j] + " ");
+//			}
+//			stemmed[i] = sb.toString();
+//			System.out.println(queries[i] + "\n  " + stemmed[i]);
+			
+			results[i] = qp.Search(queries[i]);
+			System.out.println(results[i]);
 		}
 	}
 
