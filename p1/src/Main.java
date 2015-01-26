@@ -29,7 +29,7 @@ public class Main {
 			queries[8] = "drunk driving accusations";
 			queries[9] = "actor appeared in movie premiere";
 		
-//			queries[0] = "James Bond Actors";
+//			queries[0] = "James Bond Actors";		// test query
 			
 		String[] stemmed = new String[10];
 		Results[] results = new Results[10];

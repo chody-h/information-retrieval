@@ -34,11 +34,11 @@ public class QueryProcessor {
 		int C = NUM_DOCS_TO_PROCESS;
 		for (int i = 0; i < result_scores.length; i++) {
 			double score = 0;
-			int B = max_f[i];											// if (i==199) System.out.println(B);
+			int B = max_f[i];
 			for (int j = 0; j < q.length; j++) {
 				if (q[j] == null) continue;
 				
-				double A = n[i][j];
+				double A = n[i][j];											// if (i==302) System.out.println(A + " " + B);
 				double D = D_scores[j];
 				
 				score += CalculateScore(A, B, C, D);
