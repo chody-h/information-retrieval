@@ -46,9 +46,9 @@ public class Results {
 		Formatter f = new Formatter(ret, Locale.US);
 		for (int i = 0; i < 10; i++) {
 			if (doc_ids[i] > 0) {
-				f.format("From:  Doc (%d).txt\n", doc_ids[i]+1);
-				f.format("Summary:  %s\n", first_sentences[i]);
-				f.format("Score:  %f\n\n", top_scores[i]);
+				f.format("Doc (%d).txt\t", doc_ids[i]+1);
+				f.format("%s\t", first_sentences[i]);
+				f.format("%f\t\n", top_scores[i]);
 			}
 			else {
 				f.format("From:  none\n");

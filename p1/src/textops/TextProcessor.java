@@ -194,7 +194,7 @@ public class TextProcessor {
 	
 	public String[] Tokenize(String phrase) {
 //		1. Tokenize - remove caps, punctuation, hyphens
-		String[] words = phrase.replaceAll("[^a-zA-Z0-9 \n]", "").toLowerCase().split("\\s+");
+		String[] words = phrase.replaceAll("[^a-zA-Z0-9 \n]", " ").toLowerCase().split("\\s+");
 		
 		for (int i = 0; i < words.length; i++) {
 //			2. Remove stop-words
