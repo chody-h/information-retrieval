@@ -14,6 +14,7 @@ public class TextProcessor {
 //						value: freq_of_occur
 	private int[] wordcount;
 	private int[] max_freq_of_doc;
+	private Map<String, int[]> bigrams;
 
 	public TextProcessor() {
 //		0. Init stuff that won't change doc by doc
@@ -22,16 +23,24 @@ public class TextProcessor {
 		index = new HashMap<String, int[]>();
 		wordcount = new int[NUM_DOCS_TO_PROCESS];
 		max_freq_of_doc = null;
+		bigrams = new HashMap<String, int[]>();
 	}
 	
-	public String PrintRankFreq_Words() {
+	public String PrintRankFreq(String which) {
+		boolean bigrams_flag = false;
+		if (which.equals("bigrams")) bigrams_flag = true;
+		
 		TreeMap <Integer, ArrayList<String>> frequencies = new TreeMap<Integer, ArrayList<String>>();
-		Iterator it = index.entrySet().iterator();
+		Iterator it;
+		if (bigrams_flag) it = bigrams.entrySet().iterator();
+		else it = index.entrySet().iterator();
 		while (it.hasNext()) {
 			Map.Entry pairs = (Map.Entry)it.next();
 			String word = (String) pairs.getKey();
 			int[] value = (int[]) pairs.getValue();
-			int freq = FindFrequencyByDocument(word, -1);
+			int freq;
+			if (bigrams_flag) freq = FindFrequencyByDocument(2, word, -1);
+			else freq = FindFrequencyByDocument(1, word, -1);
 			
 			if (!frequencies.containsKey(freq)) 
 				frequencies.put(freq, new ArrayList<String>());
@@ -39,19 +48,22 @@ public class TextProcessor {
 		}
 		
 		StringBuilder sb = new StringBuilder();
-		sb.append("R\tF\tWords\n");
+		if (bigrams_flag) sb.append("\tR\t\tF\t\tBigrams\n");
+		else sb.append("\tR\t\tF\t\tWords\n");
 		NavigableMap<Integer, ArrayList<String>> nmap = frequencies.descendingMap();
 		int rank = 1;
 		for (Entry<Integer, ArrayList<String>> entry: nmap.entrySet()) {
-			sb.append(rank);
-			sb.append("\t");
-			int freq = entry.getKey();
-			sb.append(freq);
-			sb.append("\t");
-			ArrayList<String> words = entry.getValue();
-			sb.append(words.toString());
-			sb.append("\n");
-			rank += words.size();
+			ArrayList<String> bigrams = entry.getValue();
+			for (String b : bigrams){
+				sb.append(String.format("%5d", rank));
+				sb.append("\t");
+				int freq = entry.getKey();
+				sb.append(String.format("%5d", freq));
+				sb.append("\t\t");
+				sb.append(b);
+				sb.append("\n");
+				rank++;
+			}
 		}
 		return sb.toString();
 	}
@@ -85,7 +97,7 @@ public class TextProcessor {
 		int[][] relevant = new int[NUM_DOCS_TO_PROCESS][q.length];
 		for (int i = 0; i < q.length; i++) {
 			for (int j = 0; j < NUM_DOCS_TO_PROCESS; j++) {
-				relevant[j][i] = FindFrequencyByDocument(q[i], j);
+				relevant[j][i] = FindFrequencyByDocument(1, q[i], j);
 			}
 		}
 		return relevant;
@@ -156,8 +168,10 @@ public class TextProcessor {
 			return wordcount[doc_num - 1];
 	}
 	
-	public int FindFrequencyByDocument(String word, int doc_num) {
-		int[] freq = index.get(word);
+	public int FindFrequencyByDocument(int num_words, String word, int doc_num) {
+		int[] freq;
+		if (num_words == 1) freq = index.get(word);
+		else freq = bigrams.get(word);
 		if (freq == null) return 0;										// word not found
 		if (doc_num >= NUM_DOCS_TO_PROCESS || doc_num < -1) return -1;	// document out of range
 		
@@ -179,7 +193,7 @@ public class TextProcessor {
 			System.out.println(pairs.getKey() + " = " + value[0] + " " + value[1] + " "  + value[2] + " "  + value[3]);
 		}
 	}
-	
+
 	public void InitFiles() {
 		for (int doc_num = 0; doc_num < NUM_DOCS_TO_PROCESS; doc_num++) {
 			String[] words = null;
@@ -219,6 +233,21 @@ public class TextProcessor {
 					freq[doc_num] = 1;
 					index.put(words[i], freq);
 				}
+				
+//				5. Add bigram to indexed structure
+				String bigram = words[i];
+				if (i + 1 != words.length) bigram = bigram + " " + words[i+1];
+				else continue;
+				if (bigrams.containsKey(bigram)) {
+					int[] freq = bigrams.get(bigram);
+					freq[doc_num] += 1;
+					bigrams.put(bigram, freq);
+				}
+				else {
+					int[] freq = new int[NUM_DOCS_TO_PROCESS];
+					freq[doc_num] = 1;
+					bigrams.put(bigram, freq);
+				}
 			}
 		}
 		
@@ -231,12 +260,14 @@ public class TextProcessor {
 		
 		for (int i = 0; i < words.length; i++) {
 //			2. Remove stop-words
-			if (stopwords.contains(words[i])) {
-				words[i] = null;
-				continue;
-			}
+//			if (stopwords.contains(words[i])) {
+//				words[i] = null;
+//				continue;
+//			}
 			
 //			3. Stem remaining words
+//													System.out.println(words[i]);
+													if (words[i].equals("s")) continue;
 			String temp = stemmer.stem(words[i]);
 			if (temp != "Invalid term") {
 				words[i] = temp;

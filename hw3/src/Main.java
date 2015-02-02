@@ -1,3 +1,7 @@
+import java.io.FileNotFoundException;
+import java.io.PrintWriter;
+import java.io.UnsupportedEncodingException;
+
 import textops.*;
 
 
@@ -5,15 +9,20 @@ public class Main {
 
 	/**
 	 * @param args
+	 * @throws UnsupportedEncodingException 
+	 * @throws FileNotFoundException 
 	 */
-	public static void main(String[] args) {
+	public static void main(String[] args) throws FileNotFoundException, UnsupportedEncodingException {
 		TextProcessor tp = new TextProcessor();
-		
 		tp.InitFiles();
-		System.out.println(tp.PrintRankFreq_Words());
 		
-//		tp.InitBigrams();
-//		tp.PrintRankFreq_Bigrams();
+		PrintWriter writer = new PrintWriter("output_words.txt", "UTF-8");
+		writer.print(tp.PrintRankFreq("words"));
+		writer.close();
+		
+		writer = new PrintWriter("output_bigrams.txt", "UTF-8");
+		writer.print(tp.PrintRankFreq("bigrams"));
+		writer.close();
 	}
 
 }
