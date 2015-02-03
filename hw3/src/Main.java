@@ -14,15 +14,19 @@ public class Main {
 	 */
 	public static void main(String[] args) throws FileNotFoundException, UnsupportedEncodingException {
 		TextProcessor tp = new TextProcessor();
-		tp.InitFiles();
+		System.out.println(tp.InitFiles());
 		
-		PrintWriter writer = new PrintWriter("output_words.txt", "UTF-8");
-		writer.print(tp.PrintRankFreq("words"));
-		writer.close();
-		
-		writer = new PrintWriter("output_bigrams.txt", "UTF-8");
-		writer.print(tp.PrintRankFreq("bigrams"));
-		writer.close();
+//		PrintWriter writer = new PrintWriter("output_words.txt", "UTF-8");
+//		writer.print(tp.PrintRankFreq("words"));
+//		writer.close();
+//		
+//		writer = new PrintWriter("output_bigrams.txt", "UTF-8");
+//		writer.print(tp.PrintRankFreq("bigrams"));
+//		writer.close();
+//		
+//		writer = new PrintWriter("output_combination.txt", "UTF-8");
+//		writer.print(tp.PrintRankFreq("combination"));
+//		writer.close();
 	}
 
 }

@@ -28,11 +28,17 @@ public class TextProcessor {
 	
 	public String PrintRankFreq(String which) {
 		boolean bigrams_flag = false;
+		boolean combination_flag = false;
 		if (which.equals("bigrams")) bigrams_flag = true;
+		if (which.equals("combination")) combination_flag = true;
 		
 		TreeMap <Integer, ArrayList<String>> frequencies = new TreeMap<Integer, ArrayList<String>>();
 		Iterator it;
 		if (bigrams_flag) it = bigrams.entrySet().iterator();
+		else if (combination_flag) {
+			index.putAll(bigrams);
+			it = index.entrySet().iterator();
+		}
 		else it = index.entrySet().iterator();
 		while (it.hasNext()) {
 			Map.Entry pairs = (Map.Entry)it.next();
@@ -53,18 +59,21 @@ public class TextProcessor {
 		NavigableMap<Integer, ArrayList<String>> nmap = frequencies.descendingMap();
 		int rank = 1;
 		for (Entry<Integer, ArrayList<String>> entry: nmap.entrySet()) {
-			ArrayList<String> bigrams = entry.getValue();
-			for (String b : bigrams){
+			ArrayList<String> words = entry.getValue();
+//			for (String b : bigrams){
 				sb.append(String.format("%5d", rank));
 				sb.append("\t");
 				int freq = entry.getKey();
 				sb.append(String.format("%5d", freq));
 				sb.append("\t\t");
-				sb.append(b);
+				sb.append(words.toString());
 				sb.append("\n");
-				rank++;
-			}
+//				rank++;
+				rank += words.size();
+//			}
 		}
+		if (bigrams_flag) sb.append("num entries: " + bigrams.size());
+		else sb.append("num entries: " + index.size());
 		return sb.toString();
 	}
 	
@@ -194,7 +203,10 @@ public class TextProcessor {
 		}
 	}
 
-	public void InitFiles() {
+	public String InitFiles() {
+		StringBuilder sb = new StringBuilder();
+		sb.append("#w\t#d\n");
+		
 		for (int doc_num = 0; doc_num < NUM_DOCS_TO_PROCESS; doc_num++) {
 			String[] words = null;
 			try {
@@ -215,7 +227,7 @@ public class TextProcessor {
 				words = Tokenize(file_contents);
 			} catch (IOException e) {
 				e.printStackTrace();
-				return;
+				return "";
 			}
 			
 			for (int i = 0; i < words.length; i++) {
@@ -235,23 +247,29 @@ public class TextProcessor {
 				}
 				
 //				5. Add bigram to indexed structure
-				String bigram = words[i];
-				if (i + 1 != words.length) bigram = bigram + " " + words[i+1];
-				else continue;
-				if (bigrams.containsKey(bigram)) {
-					int[] freq = bigrams.get(bigram);
-					freq[doc_num] += 1;
-					bigrams.put(bigram, freq);
-				}
-				else {
-					int[] freq = new int[NUM_DOCS_TO_PROCESS];
-					freq[doc_num] = 1;
-					bigrams.put(bigram, freq);
-				}
+//				String bigram = words[i];
+//				if (i + 1 != words.length) bigram = bigram + " " + words[i+1];
+//				else continue;
+//				if (bigrams.containsKey(bigram)) {
+//					int[] freq = bigrams.get(bigram);
+//					freq[doc_num] += 1;
+//					bigrams.put(bigram, freq);
+//				}
+//				else {
+//					int[] freq = new int[NUM_DOCS_TO_PROCESS];
+//					freq[doc_num] = 1;
+//					bigrams.put(bigram, freq);
+//				}
 			}
+
+			sb.append(doc_num + 1);
+			sb.append("\t");
+			sb.append(index.size());
+			sb.append("\n");
 		}
 		
 		max_freq_of_doc = MaxFreqOfDoc(-1);
+		return sb.toString();
 	}
 	
 	public String[] Tokenize(String phrase) {
@@ -260,10 +278,10 @@ public class TextProcessor {
 		
 		for (int i = 0; i < words.length; i++) {
 //			2. Remove stop-words
-//			if (stopwords.contains(words[i])) {
-//				words[i] = null;
-//				continue;
-//			}
+			if (stopwords.contains(words[i])) {
+				words[i] = null;
+				continue;
+			}
 			
 //			3. Stem remaining words
 //													System.out.println(words[i]);
