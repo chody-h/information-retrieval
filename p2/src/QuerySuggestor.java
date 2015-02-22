@@ -1,15 +1,17 @@
+
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 
 import textops.PorterStemmer;
+import textops.RelatedQueries;
 import textops.StopWords;
 
 public class QuerySuggestor {
 	
-	private PorterStemmer ps = new PorterStemmer();
-	private StopWords sw = new StopWords();
+	private static PorterStemmer ps = new PorterStemmer();
+	private static StopWords sw = new StopWords();
 	private static ArrayList<RelatedQueries> rq = new ArrayList<RelatedQueries>();
 	
 //	private static Freq_App freq = new Freq_App();
@@ -47,11 +49,14 @@ public class QuerySuggestor {
 				r.AddRelated(in.readLine());
 				
 				while ((nextLine = in.readLine()) != null) {
+					// construct related queries structure
 					if (!r.IsRelated(nextLine)) {
 						rq.add(r);
 						r = new RelatedQueries();
 					}
 					r.AddRelated(nextLine);
+					
+					// construct trie structure
 				}
 				in.close();
 			} catch (IOException e) {
