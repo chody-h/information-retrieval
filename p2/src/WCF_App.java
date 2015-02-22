@@ -18,13 +18,11 @@ import org.jsoup.nodes.Document;
 
 public class WCF_App {
 
-
-	public static void main(String[] args) {
+	public static void Score(String w1, String w2) {
 		try{
 
-			String w1="cinema"; //stemmed version of a word
-			String w2="movi"; //stemmed version of a word
-
+//			String w1="cinema"; //stemmed version of a word
+//			String w2="movi"; //stemmed version of a word
 
 			String myURL = "http://peacock.cs.byu.edu/CS453Proj2/?word1="+w1+"&word2="+w2;
 
