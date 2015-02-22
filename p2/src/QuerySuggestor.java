@@ -38,11 +38,15 @@ public class QuerySuggestor {
 			try {
 				BufferedReader in = new BufferedReader(new FileReader(pre+doc));
 				String nextLine = "";
+				
+				// first line is just a column title
 				in.readLine();
+				
+				// initialize first piece of data
 				RelatedQueries r = new RelatedQueries();
-				r.AddRelated(nextLine = in.readLine());
+				r.AddRelated(in.readLine());
+				
 				while ((nextLine = in.readLine()) != null) {
-//					if (nextLine.split("\\s")[0].equals("AnonID")) continue;
 					if (!r.IsRelated(nextLine)) {
 						rq.add(r);
 						r = new RelatedQueries();
@@ -58,7 +62,7 @@ public class QuerySuggestor {
 	}
 	
 	public static void PrintSomeQueries() {
-		for (int i = 0; i < 100; i++) {
+		for (int i = 0; i < 10; i++) {
 			System.out.println(rq.get(i).toString());
 		}
 	}
