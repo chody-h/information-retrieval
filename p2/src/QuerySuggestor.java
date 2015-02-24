@@ -36,47 +36,58 @@ public class QuerySuggestor {
 			for (int i = 0; i < 8; i++) {
 				System.out.println(LargestKey(outputs));
 			}
+			System.out.println();
 		}
 	}
 	
 	public static String ValidInput(String regex) {
-		Scanner r = new Scanner(System.in);
+		Scanner s = new Scanner(System.in);
 		boolean valid = false;
 		String input = "";
 		while (!valid) {
 			System.out.println("Please enter a query:");
-			input = r.nextLine();
+			input = s.nextLine();
 			if (input.matches(regex)) {
 				valid = true;
-				System.out.println("Input valid: " + input);
+				System.out.println("Valid.");
 			}
 			else {
 				System.out.println("Your query must match " + regex);
 			}
 		}
-		r.close();
 		return input.toLowerCase();
 	}
 	
 	public static HashMap<String, Double> Suggest(String in) {
 		HashMap<String, Double> ret = new HashMap<String, Double>();
-		RelatedQueries r = FindRelatedQueries(in);
+		ArrayList<RelatedQueries> r = FindRelatedQueries(in);
 		Trie.Node n = GetSubtree(in);
 		for (Trie.Node ex : n.GetExpansions()) {
 			String s = t.GetWord(ex);										// suggested expansion
+			String w = s.replace(in+" ", "");								// suggested expansion w/o original
 			
-			double freq = ex.count / t.maxCount;
+			double freq = (double)(ex.count / t.maxCount);
 			
 			String w1 = ps.stem(in.split(" ")[in.split(" ").length-1]);		// last word of query
-			String w2 = ps.stem(s.split(" ")[0]);							// first word of expansion
+			String w2 = ps.stem(s.replace(in+" ", "").split(" ")[0]);		// first word of expansion
 			double wcf = WCF_App.Score(w1, w2);
-			if (wcf == -1) return null;
 			
-			double mod = r.ModifiedTo(in, s);
+			double mod = ModifiedTo(r, in, s);
 			
 			double rank = (freq + wcf + mod) / (1 - Math.min(freq, Math.min(wcf, mod)));
 			
-			ret.put(w2, rank);
+			ret.put(w, rank);
+		}
+		
+		return ret;
+	}
+	
+	public static double ModifiedTo(ArrayList<RelatedQueries> r, String in, String expansion) {
+		double ret = 0;
+		
+		for (RelatedQueries rel : r) {
+			Double temp = rel.ModifiedTo(in, expansion);
+			if (temp > ret) ret = temp;
 		}
 		
 		return ret;
@@ -89,7 +100,7 @@ public class QuerySuggestor {
 		while (it.hasNext()) {
 			Map.Entry<String, Double> pair = (Map.Entry<String, Double>) it.next();
 			Double temp = (Double)pair.getValue();
-			if (temp > largestVal) {
+			if (temp >= largestVal) {
 				largestVal = temp;
 				bestSugg = (String)pair.getKey();
 			}
@@ -107,11 +118,12 @@ public class QuerySuggestor {
 		return t.GetNode(s);
 	}
 	
-	public static RelatedQueries FindRelatedQueries(String s) {
+	public static ArrayList<RelatedQueries> FindRelatedQueries(String s) {
+		ArrayList<RelatedQueries> ret = new ArrayList<RelatedQueries>();
 		for (RelatedQueries q : rq) {
-			if (q.QueryInSet(s)) return q;
+			if (q.QueryInSet(s)) ret.add(q);
 		}
-		return null;
+		return ret;
 	}
 	
 	public static void ParseFiles() {
@@ -151,8 +163,8 @@ public class QuerySuggestor {
 					r.AddRelated(q);
 					
 					// construct trie structure
-					String groomed = q[1].replaceAll("[^a-zA-Z ]", "").toLowerCase();
-					t.AddQuery(groomed);
+//					String groomed = q[1].replaceAll("[^a-zA-Z ]", "").toLowerCase();
+					t.AddQuery(q[1]);
 				}
 				in.close();
 			} catch (IOException e) {

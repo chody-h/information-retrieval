@@ -20,7 +20,12 @@ public class Trie {
 			current = current.children[c];
 			if (isLast) {
 				current.IncrementCount();
-				if (current.count > maxCount) maxCount = current.count;
+				if (current.count > maxCount) {
+					maxCount = current.count;
+					if (maxCount > 16000) {
+						int j = 1 + 2;
+					}
+				}
 			}
 		}
 	}

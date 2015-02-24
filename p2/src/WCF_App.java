@@ -40,10 +40,11 @@ public class WCF_App {
 
 //			System.out.println(val);
 			
+			if (val == -1) val = 0.0;
 			return val;
 
 		}
-		catch (IOException e) {
+		catch (Exception e) {
 			e.printStackTrace();
 			return (double) -1;
 		}
