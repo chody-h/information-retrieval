@@ -18,7 +18,7 @@ import org.jsoup.nodes.Document;
 
 public class WCF_App {
 
-	public static void Score(String w1, String w2) {
+	public static Double Score(String w1, String w2) {
 		try{
 
 //			String w1="cinema"; //stemmed version of a word
@@ -39,10 +39,13 @@ public class WCF_App {
 			Double val= Double.parseDouble(contentVal);
 
 			System.out.println(val);
+			
+			return val;
 
 		}
 		catch (IOException e) {
 			e.printStackTrace();
+			return (double) -1;
 		}
 
 	}

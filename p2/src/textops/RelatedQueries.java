@@ -14,6 +14,20 @@ public class RelatedQueries {
 		queries = new ArrayList<Query>();
 	}
 	
+	public double ModifiedTo(String q1, String q2) {
+		double ret = 0;
+		
+		for (int i = 0; i < queries.size(); i++) {
+			if (queries.get(i).equals(q1)) {
+				while (++i < queries.size() && queries.get(i).equals(q2)) 
+					ret++;
+				break;
+			}
+		}
+		
+		return Math.log(ret);
+	}
+	
 	public boolean IsRelated(String[] query) {
 		// false: nothing in it
 		// false: user id is different

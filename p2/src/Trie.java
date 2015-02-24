@@ -7,6 +7,7 @@ public class Trie {
 	
 	public Node root = new Node(null, (char)0, false);
 	Random r = new Random();
+	public int maxCount = 0;
 	
 	// q should consist ONLY of lower case letters and spaces. nothing else.
 	public void AddQuery(String q) {
@@ -18,8 +19,10 @@ public class Trie {
 			if (current.children[c] == null) 
 				current.children[c] = new Node(current, q.charAt(i), isLast);
 			current = current.children[c];
-			if (isLast) 
+			if (isLast) {
 				current.IncrementCount();
+				if (current.count > maxCount) maxCount = current.count;
+			}
 		}
 	}
 	

@@ -5,6 +5,8 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
 
 import textops.PorterStemmer;
 import textops.RelatedQueries;
@@ -30,23 +32,51 @@ public class QuerySuggestor {
 		Console c = System.console();
 		while (true) {
 			String input = c.readLine("Please enter a query:");
-			HashMap<Double, String> outputs = Suggest(input);
+			HashMap<String, Double> outputs = Suggest(input);
+			for (int i = 0; i < 8; i++) {
+				System.out.println(LargestKey(outputs));
+			}
 		}
 	}
 	
-	public static HashMap<Double, String> Suggest(String in) {
-		HashMap<Double, String> ret = new HashMap<Double, String>();
+	public static HashMap<String, Double> Suggest(String in) {
+		HashMap<String, Double> ret = new HashMap<String, Double>();
 		RelatedQueries r = FindRelatedQueries(in);
 		Trie.Node n = GetSubtree(in);
 		for (Trie.Node ex : n.GetExpansions()) {
-			String s = t.GetWord(ex);
-			double freq = Math.log(ex.count);
-			double wcf = 0;
-			double mod = 0;
+			String s = t.GetWord(ex);										// suggested expansion
+			
+			double freq = ex.count / t.maxCount;
+			
+			String w1 = ps.stem(in.split(" ")[in.split(" ").length-1]);		// last word of query
+			String w2 = ps.stem(s.split(" ")[0]);							// first word of expansion
+			double wcf = WCF.Score(w1, w2);
+			if (wcf == -1) return null;
+			
+			double mod = r.ModifiedTo(in, s);
+			
 			double rank = (freq + wcf + mod) / (1 - Math.min(freq, Math.min(wcf, mod)));
+			
+			ret.put(s, rank);
 		}
 		
 		return ret;
+	}
+	
+	public static String LargestKey(HashMap<String, Double> m) {
+		Iterator it = m.entrySet().iterator();
+		double largestVal = 0;
+		String bestSugg = "";
+		while (it.hasNext()) {
+			Map.Entry pair = (Map.Entry) it.next();
+			Double temp = (Double)pair.getValue();
+			if (temp > largestVal) {
+				largestVal = temp;
+				bestSugg = (String)pair.getKey();
+			}
+		}
+		m.remove(bestSugg);
+		return bestSugg + " (" + Double.toString(largestVal) + ")";
 	}
 	
 	public static Trie.Node GetSubtree(String s) {
