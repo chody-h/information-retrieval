@@ -55,8 +55,29 @@ public class RelatedQueries {
 		return tokens;
 	}
 	
+	public String GetNextQuery(String s) {
+		for (int i = 0; i < queries.size(); i++) {
+			if (queries.get(i).text.equals(s)) {
+				if (i != queries.size()-1) 
+					return queries.get(i+1).text;
+				else
+					return null;
+			}
+		}
+		return null;
+	}
+	
 	public String GetLastQuery() {
 		return queries.get(queries.size()-1).text;
+	}
+	
+	public boolean QueryInSet(String s) {
+		for(Query q : queries) {
+			if (q.text.equals(s))
+				return true;
+		}
+		
+		return false;
 	}
 	
 	public String toString() {

@@ -1,8 +1,10 @@
 
 import java.io.BufferedReader;
+import java.io.Console;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import textops.PorterStemmer;
 import textops.RelatedQueries;
@@ -16,7 +18,7 @@ public class QuerySuggestor {
 	private static Trie t = new Trie();
 	
 //	private static Freq_App freq = new Freq_App();
-	private static WCF_App wcf = new WCF_App();
+	private static WCF_App WCF = new WCF_App();
 //	private static Mod_App mod = new Mod_App();
 	
 	public static void main(String[] args) {
@@ -24,7 +26,36 @@ public class QuerySuggestor {
 		ParseFiles();
 		System.out.println("Done parsing files.");
 //		PrintSomeQueries();
-		PrintSomeTrie();
+//		PrintSomeTrie();
+		Console c = System.console();
+		while (true) {
+			String input = c.readLine("Please enter a query:");
+			ArrayList<String> outputs = Suggest(input);
+		}
+	}
+	
+	public static HashMap Suggest(String in) {
+		HashMap ret = new HashMap();
+		RelatedQueries r = FindRelatedQueries(in);
+		Trie.Node n = FindExpandedQueries(in);
+		for (int i = 0; i < n.CountExpansions(); i++) {
+			double freq = 0;
+			double wcf = 0;
+			double mod = 0;
+		}
+		
+		return ret;
+	}
+	
+	public static Trie.Node FindExpandedQueries(String s) {
+		return t.GetNode(s);
+	}
+	
+	public static RelatedQueries FindRelatedQueries(String s) {
+		for (RelatedQueries q : rq) {
+			if (q.QueryInSet(s)) return q;
+		}
+		return null;
 	}
 	
 	public static void ParseFiles() {
@@ -72,6 +103,8 @@ public class QuerySuggestor {
 			}
 		}
 	}
+	
+	// DEBUGGING AND TESTING
 	
 	public static void PrintSomeQueries() {
 		for (int i = 0; i < 10; i++) {

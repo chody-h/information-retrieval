@@ -11,8 +11,7 @@ public class Trie {
 		Node current = root;
 		for (int i = 0; i < q.length(); i++) {
 			char c = q.charAt(i);
-			if (c == ' ') c -= 6;						// put space at the last spot in the array
-			else c -= 97;								// put everything else in order in the array
+			c = (char) ConvertToIndex(c);
 			boolean isLast = (i == q.length() - 1);
 			if (current.children[c] == null) 
 				current.children[c] = new Node(current, q.charAt(i), isLast);
@@ -22,11 +21,25 @@ public class Trie {
 		}
 	}
 	
+	public Node GetNode(String s) {
+		try {
+			Node current = root;
+			for (int i = 0; i < s.length(); i++) {
+				char c = s.charAt(i);
+				c = ConvertToIndex(c);
+				current = current.children[c];
+			}
+			return current;
+		}
+		catch (Exception e) {
+			return null;
+		}
+	}
+	
 	// find a random word in the trie
 	public String GetRandom() {
 		Node current = root;
 		while (!current.complete) {
-			int combo_breaker = 0;
 			int randomInt = r.nextInt(26);
 			while (current.children[randomInt] == null)
 				randomInt = (randomInt + 1) % 27;
@@ -45,7 +58,12 @@ public class Trie {
 		return ret.toString();
 	}
 	
-	private class Node {
+	private char ConvertToIndex(char c) {
+		if (c == ' ') return c -= 6;			// put space at the last spot in the array
+		else return c -= 97;					// put everything else in order in the array
+	}
+	
+	public class Node {
 		public Node[] children;
 		public Node parent;
 		public char c;
@@ -62,6 +80,27 @@ public class Trie {
 		
 		public void IncrementCount() {
 			count++;
+		}
+		
+		public boolean HasNoChildren() {
+			for (Node n : children) {
+				if (n != null) return false;
+			}
+			return true;
+		}
+		
+		public int CountExpansions() {
+			if (complete)
+				if (HasNoChildren())
+					return 1;
+				
+			int count = 0;
+			for (Node n : children) {
+				if (n != null) {
+					count += n.CountExpansions();
+				}
+			}
+			return count;
 		}
 	}
 }
