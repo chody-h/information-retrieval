@@ -30,24 +30,26 @@ public class QuerySuggestor {
 		Console c = System.console();
 		while (true) {
 			String input = c.readLine("Please enter a query:");
-			ArrayList<String> outputs = Suggest(input);
+			HashMap<Double, String> outputs = Suggest(input);
 		}
 	}
 	
-	public static HashMap Suggest(String in) {
-		HashMap ret = new HashMap();
+	public static HashMap<Double, String> Suggest(String in) {
+		HashMap<Double, String> ret = new HashMap<Double, String>();
 		RelatedQueries r = FindRelatedQueries(in);
-		Trie.Node n = FindExpandedQueries(in);
-		for (int i = 0; i < n.CountExpansions(); i++) {
-			double freq = 0;
+		Trie.Node n = GetSubtree(in);
+		for (Trie.Node ex : n.GetExpansions()) {
+			String s = t.GetWord(ex);
+			double freq = Math.log(ex.count);
 			double wcf = 0;
 			double mod = 0;
+			double rank = (freq + wcf + mod) / (1 - Math.min(freq, Math.min(wcf, mod)));
 		}
 		
 		return ret;
 	}
 	
-	public static Trie.Node FindExpandedQueries(String s) {
+	public static Trie.Node GetSubtree(String s) {
 		return t.GetNode(s);
 	}
 	
@@ -84,6 +86,8 @@ public class QuerySuggestor {
 				
 				while ((nextLine = in.readLine()) != null) {
 					q = r.ParseLine(nextLine);
+					q[1] = q[1].replaceAll("[^a-zA-Z ]", "").toLowerCase();
+					q[1] = ChopFirstStopword(q[1]);
 					
 					// construct related queries structure
 					if (!r.IsRelated(q)) {
@@ -102,6 +106,18 @@ public class QuerySuggestor {
 				return;
 			}
 		}
+	}
+	
+	public static String ChopFirstStopword(String q) {
+		String[] spl = q.split(" ");
+		if (sw.contains(spl[0])) {
+			StringBuilder s = new StringBuilder();
+			for (int i = 1; i < spl.length; i++) 
+				s.append(spl[i]);
+			return s.toString();
+		}
+		else 
+			return q;
 	}
 	
 	// DEBUGGING AND TESTING

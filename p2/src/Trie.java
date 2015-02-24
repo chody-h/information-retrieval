@@ -1,3 +1,5 @@
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Random;
 
 
@@ -49,7 +51,7 @@ public class Trie {
 	}
 	
 	// pass in a node, traverse up the tree, return the whole string
-	private String GetWord(Node n) {
+	public String GetWord(Node n) {
 		StringBuilder ret = new StringBuilder();
 		while (n.parent != null) {
 			ret.insert(0, n.c);
@@ -89,18 +91,25 @@ public class Trie {
 			return true;
 		}
 		
-		public int CountExpansions() {
-			if (complete)
-				if (HasNoChildren())
-					return 1;
-				
-			int count = 0;
-			for (Node n : children) {
-				if (n != null) {
-					count += n.CountExpansions();
-				}
-			}
-			return count;
+		public HashSet<Node> GetExpansions() {
+			HashSet<Node> ret = new HashSet<Node>();
+			for (Node n : children) 
+				if (n != null) 
+					ret.addAll(n.GetValidExpansions());
+
+			return ret;
+		}
+		
+		public HashSet<Node> GetValidExpansions() {
+			HashSet<Node> ret = new HashSet<Node>();
+			if (this.complete) 
+				ret.add(this);
+			else 
+				for (Node n : children) 
+					if (n != null) 
+						ret.addAll(n.GetValidExpansions());
+
+			return ret;
 		}
 	}
 }
