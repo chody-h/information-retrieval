@@ -59,24 +59,38 @@ public class QuerySuggestor {
 	}
 	
 	public static HashMap<String, Double> Suggest(String in) {
+		System.out.println("Calculating suggestions...");
+		
 		HashMap<String, Double> ret = new HashMap<String, Double>();
 		ArrayList<RelatedQueries> r = FindRelatedQueries(in);
-		Trie.Node n = GetSubtree(in);
-		for (Trie.Node ex : n.GetExpansions()) {
-			String s = t.GetWord(ex);										// suggested expansion
-			String w = s.replace(in+" ", "");								// suggested expansion w/o original
+//		Trie.Node n = GetSubtree(in);
+		int maxFreqofSugg = 0;
+		for (RelatedQueries rel : r) {
+			String SQ = rel.GetNextQuery(in);
+			if (SQ == null) continue;
 			
-			double freq = (double)(ex.count / t.maxCount);
+			int freq = t.GetNode(SQ).count;
+			if (freq > maxFreqofSugg) maxFreqofSugg = freq;
+		}
+		System.out.println(maxFreqofSugg);
+		for (RelatedQueries rel : r) {
+//			String s = t.GetWord(ex);										// suggested expansion
+//			String w = s.replace(in+" ", "");								// suggested expansion w/o original
+			String SQ = rel.GetNextQuery(in);								// Suggested Query
+			if (SQ == null) continue;
+			Trie.Node n = t.GetNode(SQ);									// Node representing SQ in Trie
+			
+			double freq = (double)(n.count / maxFreqofSugg);
 			
 			String w1 = ps.stem(in.split(" ")[in.split(" ").length-1]);		// last word of query
-			String w2 = ps.stem(s.replace(in+" ", "").split(" ")[0]);		// first word of expansion
+			String w2 = ps.stem(SQ.replace(in+" ", "").split(" ")[0]);		// first word of expansion
 			double wcf = WCF_App.Score(w1, w2);
 			
-			double mod = ModifiedTo(r, in, s);
+			double mod = ModifiedTo(r, in, SQ);
 			
 			double rank = (freq + wcf + mod) / (1 - Math.min(freq, Math.min(wcf, mod)));
 			
-			ret.put(w, rank);
+			ret.put(SQ, rank);
 		}
 		
 		return ret;
