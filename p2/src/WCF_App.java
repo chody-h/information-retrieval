@@ -27,7 +27,7 @@ public class WCF_App {
 			String myURL = "http://peacock.cs.byu.edu/CS453Proj2/?word1="+w1+"&word2="+w2;
 
 //			System.out.println("Fetching content: "+myURL);
-			System.out.println("Fetching content: " + w1 + " " + w2);
+//			System.out.println("Fetching content: " + w1 + " " + w2);
 
 			Document pageDoc = Jsoup.connect(myURL).get();
 			String htmlContent = pageDoc.html();		
@@ -38,7 +38,7 @@ public class WCF_App {
 
 			Double val= Double.parseDouble(contentVal);
 
-			System.out.println(val);
+//			System.out.println(val);
 			
 			return val;
 

@@ -87,7 +87,7 @@ public class RelatedQueries {
 	
 	public boolean QueryInSet(String s) {
 		for(Query q : queries) {
-			if (q.text.equals(s))
+			if (q.text.lastIndexOf(s, 0) == 0)
 				return true;
 		}
 		
@@ -111,7 +111,6 @@ public class RelatedQueries {
 		
 		Query(String q, String t) {
 			text = q;
-//			time = new DateTime(t);
 			time = DateTime.parse(t, DateTimeFormat.forPattern("yyyy-MM-dd HH:mm:ss"));
 		}
 		

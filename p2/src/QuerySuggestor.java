@@ -1,12 +1,13 @@
 
 import java.io.BufferedReader;
-import java.io.Console;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Scanner;
 
 import textops.PorterStemmer;
 import textops.RelatedQueries;
@@ -19,24 +20,42 @@ public class QuerySuggestor {
 	private static ArrayList<RelatedQueries> rq = new ArrayList<RelatedQueries>();
 	private static Trie t = new Trie();
 	
-//	private static Freq_App freq = new Freq_App();
-	private static WCF_App WCF = new WCF_App();
-//	private static Mod_App mod = new Mod_App();
-	
-	public static void main(String[] args) {
+	public static void main(String[] args) throws InterruptedException, IOException {
+		// put console into raw mode
+//		String[] cmd = {"/bin/sh", "-c", "stty raw </dev/tty"};
+//	    Runtime.getRuntime().exec(cmd).waitFor();
+	    
 		System.out.println("Parsing files...");
 		ParseFiles();
 		System.out.println("Done parsing files.");
-//		PrintSomeQueries();
+		PrintSomeQueries();
 //		PrintSomeTrie();
-		Console c = System.console();
 		while (true) {
-			String input = c.readLine("Please enter a query:");
-			HashMap<String, Double> outputs = Suggest(input);
+			String in = ValidInput("[A-Za-z ]+");
+			HashMap<String, Double> outputs = Suggest(in);
 			for (int i = 0; i < 8; i++) {
 				System.out.println(LargestKey(outputs));
 			}
 		}
+	}
+	
+	public static String ValidInput(String regex) {
+		Scanner r = new Scanner(System.in);
+		boolean valid = false;
+		String input = "";
+		while (!valid) {
+			System.out.println("Please enter a query:");
+			input = r.nextLine();
+			if (input.matches(regex)) {
+				valid = true;
+				System.out.println("Input valid: " + input);
+			}
+			else {
+				System.out.println("Your query must match " + regex);
+			}
+		}
+		r.close();
+		return input.toLowerCase();
 	}
 	
 	public static HashMap<String, Double> Suggest(String in) {
@@ -50,33 +69,38 @@ public class QuerySuggestor {
 			
 			String w1 = ps.stem(in.split(" ")[in.split(" ").length-1]);		// last word of query
 			String w2 = ps.stem(s.split(" ")[0]);							// first word of expansion
-			double wcf = WCF.Score(w1, w2);
+			double wcf = WCF_App.Score(w1, w2);
 			if (wcf == -1) return null;
 			
 			double mod = r.ModifiedTo(in, s);
 			
 			double rank = (freq + wcf + mod) / (1 - Math.min(freq, Math.min(wcf, mod)));
 			
-			ret.put(s, rank);
+			ret.put(w2, rank);
 		}
 		
 		return ret;
 	}
 	
 	public static String LargestKey(HashMap<String, Double> m) {
-		Iterator it = m.entrySet().iterator();
+		Iterator<Entry<String, Double>> it = m.entrySet().iterator();
 		double largestVal = 0;
 		String bestSugg = "";
 		while (it.hasNext()) {
-			Map.Entry pair = (Map.Entry) it.next();
+			Map.Entry<String, Double> pair = (Map.Entry<String, Double>) it.next();
 			Double temp = (Double)pair.getValue();
 			if (temp > largestVal) {
 				largestVal = temp;
 				bestSugg = (String)pair.getKey();
 			}
 		}
-		m.remove(bestSugg);
-		return bestSugg + " (" + Double.toString(largestVal) + ")";
+		if (bestSugg.equals("")) {
+			return "Didn't find anything.";
+		}
+		else {
+			m.remove(bestSugg);
+			return bestSugg + " (" + Double.toString(largestVal) + ")";
+		}
 	}
 	
 	public static Trie.Node GetSubtree(String s) {
@@ -143,7 +167,7 @@ public class QuerySuggestor {
 		if (sw.contains(spl[0])) {
 			StringBuilder s = new StringBuilder();
 			for (int i = 1; i < spl.length; i++) 
-				s.append(spl[i]);
+				s.append(spl[i] + " ");
 			return s.toString();
 		}
 		else 
