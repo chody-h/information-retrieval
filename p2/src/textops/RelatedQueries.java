@@ -14,12 +14,11 @@ public class RelatedQueries {
 		queries = new ArrayList<Query>();
 	}
 	
-	public boolean IsRelated(String line_from_log) {
+	public boolean IsRelated(String[] query) {
 		// false: nothing in it
 		// false: user id is different
 		// false: more than 10min apart
 		// true: otherwise
-		String[] query = ParseLine(line_from_log);
 		try {
 			int uID = Integer.parseInt(query[0]);
 			Query q = new Query(query[1], query[2]);
@@ -32,14 +31,13 @@ public class RelatedQueries {
 		return true;
 	}
 	
-	public void AddRelated(String line_from_log) {
-		String[] query = ParseLine(line_from_log);
+	public void AddRelated(String[] query) {
 		userID = Integer.parseInt(query[0]);
 		Query q = new Query(query[1], query[2]);
 		queries.add(q);
 	}
 	
-	private String[] ParseLine(String line_from_log) {
+	public String[] ParseLine(String line_from_log) {
 		String[] tokens = line_from_log.split("\t");
 		if (tokens.length > 3) System.out.println(tokens[3].toString());
 //		try {
@@ -55,6 +53,10 @@ public class RelatedQueries {
 //			return ret;
 //		}
 		return tokens;
+	}
+	
+	public String GetLastQuery() {
+		return queries.get(queries.size()-1).text;
 	}
 	
 	public String toString() {
