@@ -2,19 +2,11 @@
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Scanner;
-
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 
 import textops.PorterStemmer;
-import textops.RelatedQueries;
 import textops.StopWords;
 
 public class QuerySuggestor {
@@ -33,16 +25,15 @@ public class QuerySuggestor {
 		System.out.println("Parsing files...");
 		ParseFiles();
 		System.out.println("Done parsing files.");
-		PrintSomeQueries();
-//		PrintSomeTrie();
-		while (true) {
-			String in = ValidInput("[A-Za-z ]+");
-			HashMap<String, Double> outputs = Suggest(in);
-			for (int i = 0; i < 8; i++) {
-				System.out.println(LargestKey(outputs));
-			}
-			System.out.println();
-		}
+		PrintSomeTrie();
+//		while (true) {
+//			String in = ValidInput("[A-Za-z ]+");
+//			HashMap<String, Double> outputs = Suggest(in);
+//			for (int i = 0; i < 8; i++) {
+//				System.out.println(LargestKey(outputs));
+//			}
+//			System.out.println();
+//		}
 	}
 	
 //	private static String ValidInput(String regex) {
@@ -149,44 +140,48 @@ public class QuerySuggestor {
 		String pre = "files/";
 		String[] docs = {
 				"Clean-Data-01.txt",
-//				"Clean-Data-02.txt",
-//				"Clean-Data-03.txt",
-//				"Clean-Data-04.txt",
-//				"Clean-Data-05.txt",
+				"Clean-Data-02.txt",
+				"Clean-Data-03.txt",
+				"Clean-Data-04.txt",
+				"Clean-Data-05.txt",
 		};
 		int num = 1;
 		for (String doc : docs) {
-			System.out.println("parsing file " + num++);
+			double startTime = System.nanoTime();
+			System.out.printf("parsing file %d ", num++);
 			try {
 				BufferedReader in = new BufferedReader(new FileReader(pre+doc));
-				String nextLine = "";
 				
 				// first line is just a column title
 				in.readLine();
 				
 				// initialize necessary variables
-				String[] q1 = nextLine.split("\t");
-				q1[1] = q1[1].replaceAll("[^a-zA-Z ]", "").toLowerCase();
-				q1[1] = ChopFirstStopword(q1[1]);
+				String nextLine = in.readLine();
+				String[] q1 = FormatQuery(nextLine);
 				String[] q2 = new String[3];
 				boolean mod = false;
+				t.AddQuery(q1[1], mod);
 				
 				while ((nextLine = in.readLine()) != null) {
-					q2 = nextLine.split("\t");
-					q2[1] = q2[1].replaceAll("[^a-zA-Z ]", "").toLowerCase();
-					q2[1] = ChopFirstStopword(q2[1]);
+					q2 = FormatQuery(nextLine);
 					
 					mod = IsRelated(q1, q2);
 					
 					// construct trie structure
 					t.AddQuery(q2[1], mod);
-					============================
+					
+					// swap q2 to previous
+					q1 = q2;
 				}
 				in.close();
 			} catch (IOException e) {
 				e.printStackTrace();
 				return;
 			}
+
+			double endTime = System.nanoTime();
+			double duration = (endTime - startTime)/1000000000;  //divide by 1000000 to get milliseconds.
+			System.out.printf("(%2.2f seconds)\n", duration);
 		}
 	}
 	
@@ -207,32 +202,33 @@ public class QuerySuggestor {
 		return true;
 	}
 	
-	private static String ChopFirstStopword(String q) {
-		String[] spl = q.split(" ");
-		if (sw.contains(spl[0])) {
+	private static String[] FormatQuery(String line) {
+		// split userID (0), query (1), and date (2)
+		String[] q = line.split("\t");
+		
+		// format query: ignore punctuation, check if first word is stopword
+		q[1] = q[1].replaceAll("[^a-zA-Z ]", "").toLowerCase();
+		String[] query = q[1].split(" ");
+		if (sw.contains(query[0])) {
 			StringBuilder s = new StringBuilder();
-			for (int i = 1; i < spl.length; i++) {
-				s.append(spl[i]);
-				if (i+1 < spl.length) s.append(" ");
+			for (int i = 1; i < query.length; i++) {
+				s.append(query[i]);
+				if (i+1 < query.length) s.append(" ");
 			}
-			return s.toString();
+			q[1] = s.toString();
 		}
-		else 
-			return q;
+		
+		return q;
 	}
 	
 	// DEBUGGING AND TESTING
 	
-//	public static void PrintSomeQueries() {
-//		for (int i = 0; i < 10; i++) {
-//			System.out.println(rq.get(i).toString());
-//		}
-//	}
-//	
-//	public static void PrintSomeTrie() {
-//		for (int i = 0; i < 10; i++) {
-//			System.out.println(t.GetRandom());
-//		}
-//	}
+	public static void PrintSomeTrie() {
+		System.out.printf("\nTRIE STATS\nMax Freq: %d\nMax Mod: %d\n", t.maxFreq, t.maxMod);
+		System.out.println("\nHere are ten queries I saw:");
+		for (int i = 0; i < 10; i++) {
+			System.out.println(t.GetRandom());
+		}
+	}
 
 }

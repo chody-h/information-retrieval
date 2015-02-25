@@ -1,4 +1,3 @@
-import java.util.HashSet;
 import java.util.Random;
 
 
@@ -6,7 +5,7 @@ public class Trie {
 	
 //							  parent, char rep, isLast
 	public Node root = new Node(null, (char)0, false);
-//	private static Random r = new Random();
+	private static Random r = new Random();
 	
 	public int maxFreq = 0;
 	public int maxMod = 0;
@@ -61,26 +60,26 @@ public class Trie {
 //	}
 //	
 //	// find a random word in the trie
-//	public String GetRandom() {
-//		Node current = root;
-//		while (!current.complete) {
-//			int randomInt = r.nextInt(26);
-//			while (current.children[randomInt] == null)
-//				randomInt = (randomInt + 1) % 27;
-//			current = current.children[randomInt];
-//		}
-//		return GetWord(current);
-//	}
-//	
-//	// pass in a node, traverse up the tree, return the whole string
-//	public String GetWord(Node n) {
-//		StringBuilder ret = new StringBuilder();
-//		while (n.parent != null) {
-//			ret.insert(0, n.c);
-//			n = n.parent;
-//		}
-//		return ret.toString();
-//	}
+	public String GetRandom() {
+		Node current = root;
+		while (!current.complete) {
+			int randomInt = r.nextInt(26);
+			while (current.children[randomInt] == null)
+				randomInt = (randomInt + 1) % 27;
+			current = current.children[randomInt];
+		}
+		return GetWord(current);
+	}
+	
+	// pass in a node, traverse up the tree, return the whole string
+	public String GetWord(Node n) {
+		StringBuilder ret = new StringBuilder();
+		while (n.parent != null) {
+			ret.insert(0, n.c);
+			n = n.parent;
+		}
+		return ret.toString();
+	}
 	
 	private char ConvertToIndex(char c) {
 		if (c == ' ') return c -= 6;			// put space at the last spot in the array
