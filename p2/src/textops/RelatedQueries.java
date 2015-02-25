@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
 
-public class RelatedQueries {
+public static class RelatedQueries {
 	
 	public int userID;
 	public ArrayList<Query> queries;
@@ -18,14 +18,13 @@ public class RelatedQueries {
 		double ret = 0;
 		
 		for (int i = 0; i < queries.size(); i++) {
-			if (queries.get(i).equals(q1)) {
-				while (++i < queries.size() && queries.get(i).equals(q2)) 
-					ret++;
+			if (queries.get(i).text.equals(q1) && i < queries.size()-1 && queries.get(i+1).text.equals(q2)) {
+				ret++;
 				break;
 			}
 		}
 		
-		return Math.log(ret);
+		return ret;
 	}
 	
 	public boolean IsRelated(String[] query) {
@@ -70,14 +69,14 @@ public class RelatedQueries {
 	}
 	
 	public String GetNextQuery(String s) {
-		for (int i = 0; i < queries.size(); i++) {
-			if (queries.get(i).text.equals(s)) {
-				if (i != queries.size()-1) 
-					return queries.get(i+1).text;
+		for (int i = 0; i < queries.size(); i++)
+			if (queries.get(i).text.equals(s))
+				if (i != queries.size()-1)
+					if (queries.get(i+1).text.equals(s)) 
+						continue;
+					else return queries.get(i+1).text;
 				else
 					return null;
-			}
-		}
 		return null;
 	}
 	
