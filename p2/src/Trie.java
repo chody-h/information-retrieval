@@ -1,3 +1,4 @@
+import java.util.HashSet;
 import java.util.Random;
 
 
@@ -27,39 +28,39 @@ public class Trie {
 			// make/get the node
 			if (current.children[c] == null) 
 				current.children[c] = new Node(current, q.charAt(i), isLast);
-			current = current.children[c];
 			
 			// if it was the last node to add, do bookkeeping
 			if (isLast) {
-				current.freq++;
-				if (isMultipleWords && current.freq > maxFreq)
-					maxFreq = current.freq;
+				current.children[c].freq++;
+				if (isMultipleWords && current.children[c].freq > maxFreq)
+					maxFreq = current.children[c].freq;
 				if (mod) {
-					current.mod++;
-					if (isMultipleWords && current.mod > maxMod)
-						maxMod = current.mod;
+					current.children[c].mod++;
+					if (isMultipleWords && current.children[c].mod > maxMod)
+						maxMod = current.children[c].mod;
 				}
-				
 			}
+			
+			current = current.children[c];
 		}
 	}
 	
-//	public Node GetNode(String s) {
-//		try {
-//			Node current = root;
-//			for (int i = 0; i < s.length(); i++) {
-//				char c = s.charAt(i);
-//				c = ConvertToIndex(c);
-//				current = current.children[c];
-//			}
-//			return current;
-//		}
-//		catch (Exception e) {
-//			return null;
-//		}
-//	}
-//	
-//	// find a random word in the trie
+	public Node GetNode(String s) {
+		try {
+			Node current = root;
+			for (int i = 0; i < s.length(); i++) {
+				char c = s.charAt(i);
+				c = ConvertToIndex(c);
+				current = current.children[c];
+			}
+			return current;
+		}
+		catch (Exception e) {
+			return null;
+		}
+	}
+	
+	// find a random word in the trie
 	public String GetRandom() {
 		Node current = root;
 		while (!current.complete) {
@@ -72,7 +73,7 @@ public class Trie {
 	}
 	
 	// pass in a node, traverse up the tree, return the whole string
-	public String GetWord(Node n) {
+	private String GetWord(Node n) {
 		StringBuilder ret = new StringBuilder();
 		while (n.parent != null) {
 			ret.insert(0, n.c);
@@ -91,7 +92,7 @@ public class Trie {
 		public Node parent;
 		public char c;
 		public boolean complete;
-		public int freq;
+		public int freq = 0;
 		public int mod = 0;
 		
 		public Node(Node parent, char c, boolean iscomplete) {
@@ -99,7 +100,6 @@ public class Trie {
 			this.parent = parent;
 			this.c = c;
 			complete = iscomplete;
-			freq = 0;
 		}
 		
 //		public boolean HasNoChildren() {
@@ -108,26 +108,27 @@ public class Trie {
 //			}
 //			return true;
 //		}
-//		
-//		public HashSet<Node> GetExpansions() {
-//			HashSet<Node> ret = new HashSet<Node>();
-//			for (Node n : children) 
-//				if (n != null) 
-//					ret.addAll(n.GetValidExpansions());
-//
-//			return ret;
-//		}
-//		
-//		public HashSet<Node> GetValidExpansions() {
-//			HashSet<Node> ret = new HashSet<Node>();
-//			if (this.complete) 
-//				ret.add(this);
-//			else 
-//				for (Node n : children) 
-//					if (n != null) 
-//						ret.addAll(n.GetValidExpansions());
-//
-//			return ret;
-//		}
+		
+		// I needed to make two functions because the first query is always going to be marked as "complete"
+		public HashSet<String> GetExpansions() {
+			HashSet<String> ret = new HashSet<String>();
+			for (Node n : children) 
+				if (n != null) 
+					ret.addAll(this.GetValidExpansions());
+
+			return ret;
+		}
+		
+		private HashSet<String> GetValidExpansions() {
+			HashSet<String> ret = new HashSet<String>();
+			if (this.complete) 
+				ret.add(GetWord(this));
+			else 
+				for (Node n : children) 
+					if (n != null) 
+						ret.addAll(n.GetValidExpansions());
+
+			return ret;
+		}
 	}
 }

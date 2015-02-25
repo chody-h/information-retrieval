@@ -2,6 +2,9 @@
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.HashSet;
+
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
@@ -15,84 +18,50 @@ public class QuerySuggestor {
 	
 	private static PorterStemmer ps = new PorterStemmer();
 	private static StopWords sw = new StopWords();
-	private static Trie t = new Trie();
+	private Trie t = new Trie();
 	
-	public static void main(String[] args) throws InterruptedException, IOException {
-		// put console into raw mode
-//		String[] cmd = {"/bin/sh", "-c", "stty raw </dev/tty"};
-//	    Runtime.getRuntime().exec(cmd).waitFor();
-	    
-		System.out.println("Parsing files...");
-		ParseFiles();
-		System.out.println("Done parsing files.");
-		PrintSomeTrie();
-//		while (true) {
-//			String in = ValidInput("[A-Za-z ]+");
-//			HashMap<String, Double> outputs = Suggest(in);
-//			for (int i = 0; i < 8; i++) {
-//				System.out.println(LargestKey(outputs));
-//			}
-//			System.out.println();
-//		}
+	public HashMap<String, Double> Suggest(String in) {
+		System.out.println("Calculating suggestions...");
+		
+		in = FormatQuery(in);
+		
+		HashMap<String, Double> ret = new HashMap<String, Double>();
+		Trie.Node n = GetSubtree(in + ' ');
+		HashSet<String> expansions = n.GetExpansions();
+
+		int maxFreqofSugg = 1;
+		int maxModofSugg = 1;
+		for (String sq : expansions) {
+			Trie.Node node = t.GetNode(sq);
+			
+			int freq = node.freq;
+			if (freq > maxFreqofSugg) maxFreqofSugg = freq;
+			
+			int mod = node.mod;
+			if (mod > maxModofSugg) maxModofSugg = mod;
+		}
+//		System.out.println(maxFreqofSugg);
+		
+		for (String sq : expansions) {
+			Trie.Node node = t.GetNode(sq);									// Node representing SQ in Trie
+			
+			double freq = (double) (node.freq / (double)maxFreqofSugg);
+			
+			String w1 = ps.stem(in.split(" ")[in.split(" ").length-1]);		// last word of query
+			String w2 = ps.stem(sq.replace(in+' ', "").split(" ")[0]);		// first word of expansion
+			double wcf = WCF_App.Score(w1, w2);
+			
+			double mod = (double) (node.mod / maxModofSugg);
+			
+			double rank = (freq + wcf + mod) / (1 - Math.min(freq, Math.min(wcf, mod)));
+			
+			ret.put(sq, rank);
+		}
+		
+		return ret;
 	}
 	
-//	private static String ValidInput(String regex) {
-//		Scanner s = new Scanner(System.in);
-//		boolean valid = false;
-//		String input = "";
-//		while (!valid) {
-//			System.out.println("Please enter a query:");
-//			input = s.nextLine();
-//			if (input.matches(regex)) {
-//				valid = true;
-//				System.out.println("Valid.");
-//			}
-//			else {
-//				System.out.println("Your query must match " + regex);
-//			}
-//		}
-//		return input.toLowerCase();
-//	}
-	
-//	private static HashMap<String, Double> Suggest(String in) {
-//		System.out.println("Calculating suggestions...");
-//		
-//		HashMap<String, Double> ret = new HashMap<String, Double>();
-//		ArrayList<RelatedQueries> r = FindRelatedQueries(in);
-////		Trie.Node n = GetSubtree(in);
-//		int maxFreqofSugg = 0;
-//		for (RelatedQueries rel : r) {
-//			String SQ = rel.GetNextQuery(in);
-//			if (SQ == null) continue;
-//			
-//			int freq = t.GetNode(SQ).count;
-//			if (freq > maxFreqofSugg) maxFreqofSugg = freq;
-//		}
-//		System.out.println(maxFreqofSugg);
-//		for (RelatedQueries rel : r) {
-////			String s = t.GetWord(ex);										// suggested expansion
-////			String w = s.replace(in+" ", "");								// suggested expansion w/o original
-//			String SQ = rel.GetNextQuery(in);								// Suggested Query
-//			if (SQ == null || SQ.equals(in)) continue;
-//			Trie.Node n = t.GetNode(SQ);									// Node representing SQ in Trie
-//			
-//			double freq = (double)(n.count / (double)maxFreqofSugg);
-//			
-//			String w1 = ps.stem(in.split(" ")[in.split(" ").length-1]);		// last word of query
-//			String w2 = ps.stem(SQ.replace(in+" ", "").split(" ")[0]);		// first word of expansion
-//			double wcf = WCF_App.Score(w1, w2);
-//			
-//			double mod = ModifiedTo(r, in, SQ);
-//			
-//			double rank = (freq + wcf + mod) / (1 - Math.min(freq, Math.min(wcf, mod)));
-//			
-//			ret.put(SQ.replace(in+" ", "").split(" ")[0], rank);
-//		}
-//		
-//		return ret;
-//	}
-	
-//	private static double ModifiedTo(ArrayList<RelatedQueries> r, String in, String expansion) {
+//	private double ModifiedTo(ArrayList<RelatedQueries> r, String in, String expansion) {
 //		double ret = 0;
 //		
 //		for (RelatedQueries rel : r) {
@@ -103,32 +72,11 @@ public class QuerySuggestor {
 //		return Math.log(ret);
 //	}
 	
-//	private static String LargestKey(HashMap<String, Double> m) {
-//		Iterator<Entry<String, Double>> it = m.entrySet().iterator();
-//		double largestVal = 0;
-//		String bestSugg = "";
-//		while (it.hasNext()) {
-//			Map.Entry<String, Double> pair = (Map.Entry<String, Double>) it.next();
-//			Double temp = (Double)pair.getValue();
-//			if (temp >= largestVal) {
-//				largestVal = temp;
-//				bestSugg = (String)pair.getKey();
-//			}
-//		}
-//		if (bestSugg.equals("")) {
-//			return "---";
-//		}
-//		else {
-//			m.remove(bestSugg);
-//			return bestSugg + " (" + Double.toString(largestVal) + ")";
-//		}
-//	}
-//	
-//	private static Trie.Node GetSubtree(String s) {
-//		return t.GetNode(s);
-//	}
-//	
-//	private static ArrayList<RelatedQueries> FindRelatedQueries(String s) {
+	private Trie.Node GetSubtree(String s) {
+		return t.GetNode(s);
+	}
+	
+//	private ArrayList<RelatedQueries> FindRelatedQueries(String s) {
 //		ArrayList<RelatedQueries> ret = new ArrayList<RelatedQueries>();
 //		for (RelatedQueries q : rq) {
 //			if (q.QueryInSet(s)) ret.add(q);
@@ -136,14 +84,14 @@ public class QuerySuggestor {
 //		return ret;
 //	}
 	
-	private static void ParseFiles() {
+	public void ParseFiles() {
 		String pre = "files/";
 		String[] docs = {
 				"Clean-Data-01.txt",
-				"Clean-Data-02.txt",
-				"Clean-Data-03.txt",
-				"Clean-Data-04.txt",
-				"Clean-Data-05.txt",
+//				"Clean-Data-02.txt",
+//				"Clean-Data-03.txt",
+//				"Clean-Data-04.txt",
+//				"Clean-Data-05.txt",
 		};
 		int num = 1;
 		for (String doc : docs) {
@@ -157,13 +105,13 @@ public class QuerySuggestor {
 				
 				// initialize necessary variables
 				String nextLine = in.readLine();
-				String[] q1 = FormatQuery(nextLine);
+				String[] q1 = FormatLine(nextLine);
 				String[] q2 = new String[3];
 				boolean mod = false;
 				t.AddQuery(q1[1], mod);
 				
 				while ((nextLine = in.readLine()) != null) {
-					q2 = FormatQuery(nextLine);
+					q2 = FormatLine(nextLine);
 					
 					mod = IsRelated(q1, q2);
 					
@@ -185,7 +133,7 @@ public class QuerySuggestor {
 		}
 	}
 	
-	private static boolean IsRelated(String[] q1, String[] q2) {
+	private boolean IsRelated(String[] q1, String[] q2) {
 		// different first word
 		String w1 = q1[1].split(" ")[0];
 		String w2 = q2[1].split(" ")[0];
@@ -202,28 +150,32 @@ public class QuerySuggestor {
 		return true;
 	}
 	
-	private static String[] FormatQuery(String line) {
+	private String[] FormatLine(String line) {
 		// split userID (0), query (1), and date (2)
 		String[] q = line.split("\t");
-		
-		// format query: ignore punctuation, check if first word is stopword
-		q[1] = q[1].replaceAll("[^a-zA-Z ]", "").toLowerCase();
-		String[] query = q[1].split(" ");
-		if (sw.contains(query[0])) {
-			StringBuilder s = new StringBuilder();
-			for (int i = 1; i < query.length; i++) {
-				s.append(query[i]);
-				if (i+1 < query.length) s.append(" ");
-			}
-			q[1] = s.toString();
-		}
-		
+		q[1] = FormatQuery(q[1]);		
 		return q;
+	}
+	
+	private String FormatQuery(String query) {
+		// format query: ignore punctuation, check if first word is stopword
+		query = query.replaceAll("[^a-zA-Z ]", "").toLowerCase();
+		String[] q = query.split(" ");
+		if (sw.contains(q[0])) {
+			StringBuilder s = new StringBuilder();
+			for (int i = 1; i < q.length; i++) {
+				s.append(q[i]);
+				if (i+1 < q.length) s.append(" ");
+			}
+			return s.toString();
+		}
+		else
+			return query;
 	}
 	
 	// DEBUGGING AND TESTING
 	
-	public static void PrintSomeTrie() {
+	public void PrintSomeTrie() {
 		System.out.printf("\nTRIE STATS\nMax Freq: %d\nMax Mod: %d\n", t.maxFreq, t.maxMod);
 		System.out.println("\nHere are ten queries I saw:");
 		for (int i = 0; i < 10; i++) {
