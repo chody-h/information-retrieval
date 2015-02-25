@@ -13,7 +13,7 @@ public class Main {
 		System.out.println("Parsing files...");
 		qs.ParseFiles();
 		System.out.println("Done parsing files.");
-		qs.PrintSomeTrie();
+//		qs.PrintSomeTrie();
 		while (true) {
 			String in = ValidInput("[A-Za-z ]+");
 			HashMap<String, Double> outputs =qs.Suggest(in);
