@@ -102,13 +102,6 @@ public class Trie {
 			complete = iscomplete;
 		}
 		
-//		public boolean HasNoChildren() {
-//			for (Node n : children) {
-//				if (n != null) return false;
-//			}
-//			return true;
-//		}
-		
 		// I needed to make two functions because the first query is always going to be marked as "complete"
 		public HashSet<String> GetExpansions() {
 			HashSet<String> ret = new HashSet<String>();

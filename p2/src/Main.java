@@ -31,7 +31,10 @@ public class Main {
 		while (!valid) {
 			System.out.println("Please enter a query:");
 			input = s.nextLine();
-			if (input.matches(regex)) {
+			if (input.equals("") || input.equals(" ")) {
+				System.out.println("You entered a stopword. Try again.");
+			}
+			else if (input.matches(regex)) {
 				valid = true;
 				System.out.println("Valid.");
 			}

@@ -22,10 +22,14 @@ public class QuerySuggestor {
 	
 	public HashMap<String, Double> Suggest(String in) {
 		System.out.println("Calculating suggestions...");
+		HashMap<String, Double> ret = new HashMap<String, Double>();
 		
 		in = FormatQuery(in);
+		if (in.equals("") || in.equals(" ")) {
+			System.out.println("You entered only a stopword. Input a better query.");
+			return ret;
+		}
 		
-		HashMap<String, Double> ret = new HashMap<String, Double>();
 		Trie.Node n = GetSubtree(in + ' ');
 		HashSet<String> expansions = n.GetExpansions();
 
@@ -61,42 +65,23 @@ public class QuerySuggestor {
 		return ret;
 	}
 	
-//	private double ModifiedTo(ArrayList<RelatedQueries> r, String in, String expansion) {
-//		double ret = 0;
-//		
-//		for (RelatedQueries rel : r) {
-//			double temp = rel.ModifiedTo(in, expansion);
-//			if (temp > ret) ret = temp;
-//		}
-//		
-//		return Math.log(ret);
-//	}
-	
 	private Trie.Node GetSubtree(String s) {
 		return t.GetNode(s);
 	}
-	
-//	private ArrayList<RelatedQueries> FindRelatedQueries(String s) {
-//		ArrayList<RelatedQueries> ret = new ArrayList<RelatedQueries>();
-//		for (RelatedQueries q : rq) {
-//			if (q.QueryInSet(s)) ret.add(q);
-//		}
-//		return ret;
-//	}
 	
 	public void ParseFiles() {
 		String pre = "files/";
 		String[] docs = {
 				"Clean-Data-01.txt",
-//				"Clean-Data-02.txt",
-//				"Clean-Data-03.txt",
-//				"Clean-Data-04.txt",
-//				"Clean-Data-05.txt",
+				"Clean-Data-02.txt",
+				"Clean-Data-03.txt",
+				"Clean-Data-04.txt",
+				"Clean-Data-05.txt",
 		};
-		int num = 1;
+//		int num = 1;
 		for (String doc : docs) {
-			double startTime = System.nanoTime();
-			System.out.printf("parsing file %d ", num++);
+//			double startTime = System.nanoTime();
+//			System.out.printf("parsing file %d ", num++);
 			try {
 				BufferedReader in = new BufferedReader(new FileReader(pre+doc));
 				
@@ -127,9 +112,9 @@ public class QuerySuggestor {
 				return;
 			}
 
-			double endTime = System.nanoTime();
-			double duration = (endTime - startTime)/1000000000;  //divide by 1000000 to get milliseconds.
-			System.out.printf("(%2.2f seconds)\n", duration);
+//			double endTime = System.nanoTime();
+//			double duration = (endTime - startTime)/1000000000;  //divide by 1000000 to get milliseconds.
+//			System.out.printf("(%2.2f seconds)\n", duration);
 		}
 	}
 	
