@@ -73,10 +73,10 @@ public class QuerySuggestor {
 		String pre = "files/";
 		String[] docs = {
 				"Clean-Data-01.txt",
-				"Clean-Data-02.txt",
-				"Clean-Data-03.txt",
-				"Clean-Data-04.txt",
-				"Clean-Data-05.txt",
+//				"Clean-Data-02.txt",
+//				"Clean-Data-03.txt",
+//				"Clean-Data-04.txt",
+//				"Clean-Data-05.txt",
 		};
 //		int num = 1;
 		for (String doc : docs) {
