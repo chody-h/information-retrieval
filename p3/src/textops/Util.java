@@ -1,6 +1,6 @@
-package Suggestion;
+package textops;
 
-public class Suggester {
+public class Util {
 	
 	// input: single word, no space, no punctuation. caps OK
 	// output: soundex code
@@ -10,6 +10,7 @@ public class Suggester {
 	// 	brimingham —> B655; birmingham —> B655
 	// 	poiner —> P560; pointer —> P536
 	public static String Soundex(String word) {
+		
 		char[] w = word.toLowerCase().toCharArray();
 
 		// keep the first letter in uppercase
@@ -52,15 +53,11 @@ public class Suggester {
 				return "ERROR";
 		}
 
-		// delete adjacent repeats of a number (deletions will be marked with *)
+		// delete adjacent repeats of a number (deletions will be marked with -)
 		char prev = w[0];
 		for (int i = 1; i < w.length; i++) {
 			if (w[i] == prev) 
-				w[i] = '*';
-
-			// delete hyphens 
-			if (w[i-1] == '-')
-				w[i-1] = '*';
+				w[i] = '-';
 
 			prev = w[i];
 		}
@@ -71,7 +68,7 @@ public class Suggester {
 			if (soundex.length() == 4)
 				break;
 
-			if (w[i] != '*')
+			if (w[i] != '-')
 				soundex.append(w[i]);
 		}
 		while (soundex.length() != 4)
