@@ -3,6 +3,7 @@ package p3;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.ArrayList;
 
 import textops.*;
 
@@ -19,6 +20,7 @@ public class Main {
 		"entretainment group",
 		"tv axtor",
 		"scheduled movie screning"
+//		,"churck norris"
 	};
 
 	public static void main(String[] args) {
@@ -57,6 +59,7 @@ public class Main {
 				String query = nextLine.split("\t")[1].replace("[^a-zA-Z]", "").toLowerCase();
 				q.AddCorrectQuery(id, query);
 			}
+			in.close();
 
 			in = new BufferedReader(new FileReader(f_queries));
 			nextLine = in.readLine();
@@ -65,6 +68,7 @@ public class Main {
 				String query = nextLine.split("\t")[1].replace("[^a-zA-Z]", "").toLowerCase();
 				q.AddIncorrectQuery(id, query);
 			}
+			in.close();
 		}
 		catch (IOException e) {
 			System.out.println("ERROR: problem reading query file.");
@@ -73,12 +77,19 @@ public class Main {
 		}
 		
 //		spell check queries
-		for (String query : queries) {
-			System.out.print("Did you mean: ");
-			System.out.print(q.Correct(query));
-			System.out.print("? (Originally ");
-			System.out.print(query);
-			System.out.println(")");
+		String[] corrections = new String[queries.length];
+		ArrayList<int[]> index = new ArrayList<int[]>();	// specifies whether or not the word at the index was misspelled
+		for (int i = 0; i < queries.length; i++) {
+			corrections[i] = q.Correct(queries[i]);
+			
+			String[] words = queries[i].split(" ");
+			int[] temp = new int[words.length];
+			for (int j = 0; j < words.length; j++)
+				if (d.ContainsWord(words[j]))
+					temp[j] = 0;
+				else
+					temp[j] = 1;
+			index.add(temp);
 		}
 		
 //		retrieve top 5 documents from collection with snippets
@@ -124,4 +135,13 @@ public class Main {
 		System.out.println(Util.EditDistance("screning", "screening"));
 	}
 
+	public static void TestSpellChecker(QueryAnalyzer q) {
+		for (String query : queries) {
+			System.out.print("Did you mean: ");
+			System.out.print(q.Correct(query));
+			System.out.print("? (Originally ");
+			System.out.print(query);
+			System.out.println(")");
+		}
+	}
 }

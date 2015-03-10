@@ -100,7 +100,13 @@ public class QueryAnalyzer {
 		Double highestScore = 0.0;
 
 		HashMap<String, Integer> possibilities = misspelled.get(e);
-		Iterator it = possibilities.entrySet().iterator();
+		Iterator it;
+		try {
+			it = possibilities.entrySet().iterator();
+		}
+		catch (Exception ex) {
+			return ret;
+		}
 		Double score = 0.0;
 		while (it.hasNext()) {
 			Map.Entry pair = (Map.Entry) it.next();
