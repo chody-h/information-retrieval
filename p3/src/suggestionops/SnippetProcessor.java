@@ -1,6 +1,7 @@
 package suggestionops;
 
 import java.io.File;
+import java.util.HashMap;
 import java.util.Scanner;
 
 import textops.TextProcessor;
@@ -20,15 +21,21 @@ public class SnippetProcessor {
 		String doc = GetContentsOfDoc(doc_name);
 		String[] words = query.split(" ");
 		if (doc != null) {
-			String[] sentences = SeparateBySentence(doc);
-			
-			
+			// 	sentence	score
+			HashMap<String, Double> sentences = SeparateBySentence(doc);
+			for ()
 		}
 		return ret;
 	}
 	
-	private String[] SeparateBySentence(String entire_doc) {
-		
+	// splits on . or newline, but not if the period is surrounded by decimals
+	private HashMap<String, Double> SeparateBySentence(String entire_doc) {
+		String[] sentences = entire_doc.split("\n|\\.(?!\\d)|(?<!\\d)\\.");
+		HashMap<String, Double> ret = new HashMap<String, Double>();
+		for (String s : sentences) {
+			ret.put(s, 0.0);
+		}
+		return ret;
 	}
 	
 	private String GetContentsOfDoc(String doc_name) {
