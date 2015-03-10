@@ -1,10 +1,13 @@
 package textops;
 
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
 
 public class QueryAnalyzer {
 
 	private Dictionary d;
+	private TextProcessor t;
 //					queryID	query
 	private HashMap<String, String> queries;
 //					word	count
@@ -12,15 +15,30 @@ public class QueryAnalyzer {
 //				misspelled			correct 	count
 	private HashMap<String, HashMap<String, Integer>> misspelled;
 
-	public QueryAnalyzer(Dictionary dict) {
+	public QueryAnalyzer(Dictionary dict, TextProcessor tp) {
+		d = dict;
+		t = tp;
 		queries = new HashMap<String, String>();
 		corrections = new HashMap<String, Integer>();
 		misspelled = new HashMap<String, HashMap<String, Integer>>();
-		d = dict;
 	}
 	
 	public String Correct(String query) {
-		return query;
+		if (NoMisspells(query)) return query;
+
+		String[] words = query.replace("[^a-zA-Z]", "").split(" ");
+		StringBuilder ret = new StringBuilder();
+		String pre = "";
+		for (String w : words) {
+			ret.append(pre);
+			pre = " ";
+			// misspelled word!!!!!
+			if (!d.ContainsWord(w))
+				ret.append(FindCorrection(w));
+			else 
+				ret.append(w);
+		}
+		return ret.toString();
 	}
 
 	public void AddCorrectQuery(String id, String q) {
@@ -47,20 +65,20 @@ public class QueryAnalyzer {
 
 
 						// update MISSPELLING table
-						HashMap<String, Integer> misspelling;
+						HashMap<String, Integer> correct;
 						Integer count = 1;
 						if (misspelled.containsKey(e)) {
-							misspelling = misspelled.get(e);
+							correct = misspelled.get(e);
 							// e has been corrected to w, so increment count
-							if (misspelling.containsKey(w)) 
-								count = (misspelling.get(w)) + 1;
+							if (correct.containsKey(w)) 
+								count = (correct.get(w)) + 1;
 						}
 						// e has not been seen before
 						else 
-							misspelling = new HashMap<String, Integer>();
+							correct = new HashMap<String, Integer>();
 						
-						misspelling.put(w, count);
-						misspelled.put(e, misspelling);
+						correct.put(w, count);
+						misspelled.put(e, correct);
 
 
 						// update CORRECTIONS table
@@ -74,6 +92,32 @@ public class QueryAnalyzer {
 				}
 			}
 		}
+	}
+
+	@SuppressWarnings("rawtypes")
+	private String FindCorrection(String e) {
+		String ret = "NULL";
+		Double highestScore = 0.0;
+
+		HashMap<String, Integer> possibilities = misspelled.get(e);
+		Iterator it = possibilities.entrySet().iterator();
+		Double score = 0.0;
+		while (it.hasNext()) {
+			Map.Entry pair = (Map.Entry) it.next();
+			String w = (String) pair.getKey();
+			int count = (int) pair.getValue();
+			if (Util.EditDistance(e, w) <= 2) {
+				score = (double) (count/corrections.get(w));
+				score *= (double) (t.FindFrequencyByDocument(w, -1) / t.WordCount(-1));
+			}
+			it.remove();
+			if (score > highestScore) {
+				highestScore = score;
+				ret = w;
+			}
+		}
+
+		return ret;
 	}
 
 	private boolean NoMisspells(String q) {

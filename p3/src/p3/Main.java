@@ -4,9 +4,7 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 
-import textops.Dictionary;
-import textops.QueryAnalyzer;
-import textops.Util;
+import textops.*;
 
 public class Main {
 	
@@ -46,7 +44,9 @@ public class Main {
 //		process query file
 		// add only the correct queries first. then go through the file again
 		// and add the incorrect queries with the data from the correct ones
-		QueryAnalyzer q = new QueryAnalyzer(d);
+		TextProcessor t = new TextProcessor();
+		t.InitFiles();
+		QueryAnalyzer q = new QueryAnalyzer(d, t);
 		try {
 			BufferedReader in = new BufferedReader(new FileReader(f_queries));
 			String nextLine = in.readLine();
@@ -72,7 +72,11 @@ public class Main {
 		
 //		spell check queries
 		for (String query : queries) {
-			System.out.println(q.Correct(query));
+			System.out.print("Did you mean: ");
+			System.out.print(q.Correct(query));
+			System.out.print("? (Originally ");
+			System.out.print(query);
+			System.out.println(")");
 		}
 		
 //		retrieve top 5 documents from collection with snippets

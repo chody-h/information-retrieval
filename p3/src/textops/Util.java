@@ -1,6 +1,10 @@
 package textops;
 
 public class Util {
+
+	public static int EditDistance(String e, String w) {
+		return 0;
+	}
 	
 	// input: single word, no space, no punctuation. caps OK
 	// output: soundex code
