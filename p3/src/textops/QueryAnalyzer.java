@@ -3,31 +3,73 @@ package textops;
 import java.util.HashMap;
 
 public class QueryAnalyzer {
-	
-	private HashMap<Integer, String> correct;
-	private HashMap<String, Tuple<Integer, String>> misspelled;
+
 	private Dictionary d;
+//					queryID	query
+	private HashMap<String, String> queries;
+//					word	count
+	private HashMap<String, Integer> corrections;
+//				misspelled			correct 	count
+	private HashMap<String, HashMap<String, Integer>> misspelled;
 
 	public QueryAnalyzer(Dictionary dict) {
-		correct = new HashMap<Integer, String>();
-		misspelled = new HashMap<String, ArrayList<Tuple<Integer, String>>>();
+		queries = new HashMap<String, String>();
+		corrections = new HashMap<String, Integer>();
+		misspelled = new HashMap<String, HashMap<String, Integer>>();
 		d = dict;
 	}
-
-	public void AddCorrectQuery(Integer id, String q) {
-		if (NoMisspells(q)) 
-			correct.put(id, q);
+	
+	public String Correct(String query) {
+		return query;
 	}
 
-	public void AddIncorrectQuery(Integer id, String q) {
+	public void AddCorrectQuery(String id, String q) {
+		if (NoMisspells(q)) 
+			queries.put(id, q);
+	}
+
+	public void AddIncorrectQuery(String id, String q) {
 		if (!NoMisspells(q)) {
 			String[] temp = q.split(" ");
 			for (int i = 0; i < temp.length; i++) {
+				// if this word is misspelled
 				if (!d.ContainsWord(temp[i])) {
-					String word = temp[i];
-					String correction = correct.get(id);
-					if (!correction.equals(null)) {
+
+					String e = temp[i];
+
+					// find if query log has a correction
+					if (queries.containsKey(id)) {
+						String w = "";
+						if (queries.get(id).split(" ").length > i) 
+							w = queries.get(id).split(" ")[i];
+						else
+							return;
+
+
+						// update MISSPELLING table
+						HashMap<String, Integer> misspelling;
+						Integer count = 1;
+						if (misspelled.containsKey(e)) {
+							misspelling = misspelled.get(e);
+							// e has been corrected to w, so increment count
+							if (misspelling.containsKey(w)) 
+								count = (misspelling.get(w)) + 1;
+						}
+						// e has not been seen before
+						else 
+							misspelling = new HashMap<String, Integer>();
 						
+						misspelling.put(w, count);
+						misspelled.put(e, misspelling);
+
+
+						// update CORRECTIONS table
+						if (corrections.containsKey(w)) 
+							count = (corrections.get(w)) + 1;
+						else 
+							count = 1;
+
+						corrections.put(w, count);
 					}
 				}
 			}

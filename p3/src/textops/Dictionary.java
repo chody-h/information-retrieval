@@ -25,7 +25,10 @@ public class Dictionary {
 	
 	public boolean ContainsWord(String word) {
 		String code = Util.Soundex(word);
-		return codes.get(code).contains(word);
+		if (codes.get(code) != null)
+			return codes.get(code).contains(word);
+		else
+			return false;
 	}
 	
 	public boolean ContainsCode(String code) {

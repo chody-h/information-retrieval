@@ -5,12 +5,15 @@ import java.io.FileReader;
 import java.io.IOException;
 
 import textops.Dictionary;
+import textops.QueryAnalyzer;
 import textops.Util;
 
 public class Main {
 	
-	private static String f_dict = "dictionary.txt";
-	private static String f_queries = "query_log.txt";
+	 private static String f_dict = "dictionary.txt";
+	 private static String f_queries = "query_log.txt";
+//	private static String f_dict = "test_dict.txt";
+//	private static String f_queries = "test_querylog.txt";
 	
 	private static String[] queries = new String[] {
 		"sentenced to prision",
@@ -43,20 +46,20 @@ public class Main {
 //		process query file
 		// add only the correct queries first. then go through the file again
 		// and add the incorrect queries with the data from the correct ones
-		QueryAnalyzer q = new QueryAnalyzer();
+		QueryAnalyzer q = new QueryAnalyzer(d);
 		try {
 			BufferedReader in = new BufferedReader(new FileReader(f_queries));
 			String nextLine = in.readLine();
 			while ((nextLine = in.readLine()) != null) {
-				int id = Integer.parseInt(nextLine.split("\t")[0]);
+				String id = nextLine.split("\t")[0];
 				String query = nextLine.split("\t")[1].replace("[^a-zA-Z]", "").toLowerCase();
 				q.AddCorrectQuery(id, query);
 			}
 
-			BufferedReader in = new BufferedReader(new FileReader(f_queries));
-			String nextLine = in.readLine();
+			in = new BufferedReader(new FileReader(f_queries));
+			nextLine = in.readLine();
 			while ((nextLine = in.readLine()) != null) {
-				int id = Integer.parseInt(nextLine.split("\t")[0]);
+				String id = nextLine.split("\t")[0];
 				String query = nextLine.split("\t")[1].replace("[^a-zA-Z]", "").toLowerCase();
 				q.AddIncorrectQuery(id, query);
 			}
@@ -68,7 +71,9 @@ public class Main {
 		}
 		
 //		spell check queries
-				
+		for (String query : queries) {
+			System.out.println(q.Correct(query));
+		}
 		
 //		retrieve top 5 documents from collection with snippets
 		

@@ -1,0 +1,7 @@
+Session Number	Query
+01	Movie atcor
+01	Movie actor
+02	Award winning axtor
+02	Award winning actor
+03	Soap opera axtor
+03	Soap opera actor
