@@ -111,8 +111,9 @@ public class TextProcessor {
 		return docs;
 	}
 
+	// wants a doc_num as labeled in the file
 	public int WordCount(int doc_num) {
-		if (doc_num >= NUM_DOCS_TO_PROCESS || doc_num < -1) return -1;	// document out of range
+		if (doc_num >= NUM_DOCS_TO_PROCESS || doc_num <= -1) return -1;	// document out of range
 		
 		if (doc_num == 0) {
 			int sum = 0;

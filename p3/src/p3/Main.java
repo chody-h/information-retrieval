@@ -8,8 +8,8 @@ import textops.*;
 
 public class Main {
 	
-	 private static String f_dict = "dictionary.txt";
-	 private static String f_queries = "query_log.txt";
+	private static String f_dict = "dictionary.txt";
+	private static String f_queries = "query_log.txt";
 //	private static String f_dict = "test_dict.txt";
 //	private static String f_queries = "test_querylog.txt";
 	
@@ -22,6 +22,8 @@ public class Main {
 	};
 
 	public static void main(String[] args) {
+		
+//		TestEditDistance();
 		
 //		process dictionary
 		Dictionary d = new Dictionary();
@@ -111,6 +113,15 @@ public class Main {
 		System.out.println(d.GetWords("C613"));
 		System.out.println(d.GetWords("N231"));
 		System.out.println(d.GetWords("Y000"));
+	}
+
+	public static void TestEditDistance() {
+		System.out.println(Util.EditDistance("kitten", "sitting"));
+		System.out.println(Util.EditDistance("saturday", "sunday"));
+		System.out.println(Util.EditDistance("prision", "prison"));
+		System.out.println(Util.EditDistance("entretainment", "entertainment"));
+		System.out.println(Util.EditDistance("axtor", "actor"));
+		System.out.println(Util.EditDistance("screning", "screening"));
 	}
 
 }

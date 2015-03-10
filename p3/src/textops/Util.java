@@ -3,7 +3,36 @@ package textops;
 public class Util {
 
 	public static int EditDistance(String e, String w) {
-		return 0;
+		e = e.toLowerCase();
+		w = w.toLowerCase();
+		// d is a table with e+1 rows and w+1 columns
+		int height = e.length()+1;
+		int width = w.length()+1;
+		int[][] d = new int[height][width];
+		// i and j are used to iterate over e and w
+		int i, j, cost;
+
+		for (i = 0; i < height; i++) 
+			d[i][0] = i;
+		for (j = 0; j < width; j++) 
+			d[0][j] = j;
+
+		for (i = 1; i < height; i++) {
+			for (j = 1; j < width; j++) {
+				if (e.charAt(i-1) == w.charAt(j-1))
+					cost = 0;
+				else 
+					cost = 1;
+
+				d[i][j] = Math.min(Math.min(
+					d[i-1][j  ] + 1, 	// deletion
+					d[i  ][j-1] + 1), 	// insertion
+					d[i-1][j-1] + cost 	// substitution
+				);
+			}
+		}
+
+		return d[height-1][width-1];
 	}
 	
 	// input: single word, no space, no punctuation. caps OK

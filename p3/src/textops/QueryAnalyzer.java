@@ -107,8 +107,12 @@ public class QueryAnalyzer {
 			String w = (String) pair.getKey();
 			int count = (int) pair.getValue();
 			if (Util.EditDistance(e, w) <= 2) {
-				score = (double) (count/corrections.get(w));
-				score *= (double) (t.FindFrequencyByDocument(w, -1) / t.WordCount(-1));
+				Double a = (double) count;
+				Double b = (double) corrections.get(w);
+				Double c = (double) t.FindFrequencyByDocument(w, -1);
+				Double d = (double) t.WordCount(0);
+				score = (double) (a/b);
+				score *= (double) (c/d);
 			}
 			it.remove();
 			if (score > highestScore) {
