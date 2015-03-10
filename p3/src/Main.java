@@ -1,10 +1,14 @@
-package p3;
+
 
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 
+import queryops.QueryProcessor;
+import queryops.Results;
+import suggestionops.QueryAnalyzer;
+import suggestionops.SnippetProcessor;
 import textops.*;
 
 public class Main {
@@ -93,6 +97,22 @@ public class Main {
 		}
 		
 //		retrieve top 5 documents from collection with snippets
+		QueryProcessor qp = new QueryProcessor(t);
+		SnippetProcessor sp = new SnippetProcessor(t);
+		Results[] results = new Results[queries.length];
+		String[][] snippets = new String[queries.length][5];
+		// process each query
+		for (int i = 0; i < corrections.length; i++) {
+			results[i] = qp.Search(corrections[i]);
+			// process top 5 docs for each query
+			for (int j = 0; j < 5; j++) {
+				String doc_name = results[i].GetDocIDByIndex(j);
+				if (!doc_name.equals(null))
+					snippets[i][j] = sp.GetSnippet(doc_name, corrections[i]);
+				else
+					snippets[i][j] = "ERROR";
+			}
+		}
 		
 		
 

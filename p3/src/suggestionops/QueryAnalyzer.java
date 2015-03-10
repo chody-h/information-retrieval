@@ -1,8 +1,12 @@
-package textops;
+package suggestionops;
 
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+
+import textops.Dictionary;
+import textops.TextProcessor;
+import textops.Util;
 
 public class QueryAnalyzer {
 
