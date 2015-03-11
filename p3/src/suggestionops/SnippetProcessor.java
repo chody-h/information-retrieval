@@ -1,6 +1,8 @@
 package suggestionops;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileReader;
 import java.util.HashMap;
 import java.util.Map.Entry;
 import java.util.Scanner;
@@ -22,20 +24,20 @@ public class SnippetProcessor {
 	// note that this must return TWO sentences as one string.
 	// don't forget to bold query terms
 	public String GetSnippet(String doc_name, String query) {
-		if (doc_name.equals("wikidocs/Doc (138).txt")) {
+		if (doc_name.equals("wikidocs/Doc (15).txt")) {
 			int m = 0;
 		}
 		String ret = null;
 		doc = GetContentsOfDoc(doc_name);
 		query_words = query.split(" ");
 		if (doc != null) {
-			System.out.println(doc_name + "\n");
+			 System.out.println(doc_name + "\n");
 			HashMap<String, Double> scores = ScoreDoc();
 			// place the sentences in a formatted string
 			for (Entry<String, Double> entry : scores.entrySet()) {
 				String sentence = entry.getKey();
 				Double score = entry.getValue();
-				System.out.println(sentence + "\n" + score.toString());
+				 System.out.println(sentence + "\n" + score.toString());
 			}
 			System.out.println("\n");
 		}
@@ -51,9 +53,10 @@ public class SnippetProcessor {
 	private HashMap<String, Double> ScoreDoc() {
 				// 	sentence	score
 		HashMap<String, Double> scores = new HashMap<String, Double>();
-		String[] sentences = doc.replaceAll("[^\\w.\\s]|[\\r]", "").replaceAll(".? ?\\n{2}", "\n").split("\n|\\.(?!\\d)|(?<!\\d)\\.");
-//		num_sentences = sentences.length;
-		String[] originals = doc.replaceAll("[\\r]", "").replaceAll(".? ?\\n{2}", "\n").split("\n|\\.(?!\\d)|(?<!\\d)\\.");
+		String[] sentences = doc.replaceAll("[^\\w.\\s]|[\\r]|( \\.\\.\\.)", "").replaceAll("\\.? ?(\\n{4}|\\n{2})", "\n").split("\n|\\.(?!\\d)|(?<!\\d)\\.");
+		num_sentences = sentences.length;
+		String[] originals = doc.replaceAll("[\\r]|( \\.\\.\\.)", "").replaceAll("(\\.')", "'.").replaceAll("(\\.\")", "\".").replaceAll("\\.? ?(\\n{4}|\\n{2})", "\n").split("\n|\\.(?!\\d)|(?<!\\d)\\.");
+		assert sentences.length == originals.length;
 		for (int i = 0; i < originals.length; i++) {
 			originals[i] += ".";
 		}
@@ -77,6 +80,7 @@ public class SnippetProcessor {
 	private Double ScoreSentence(String sentence, int index) {
 			Double score = 0.0;
 			String[] words = sentence.split(" ");
+			if (words.length < 2) return 0.0;
 
 			// looks like this: [w, w, s, s, w, w, s, w, w]
 			String[] markers = new String[words.length];
@@ -189,10 +193,31 @@ public class SnippetProcessor {
 	
 	private String GetContentsOfDoc(String doc_name) {
 		try {
+//			File f = new File(doc_name);
+//			Scanner s = new Scanner(f);
+//			s.useDelimiter("\\Z");
+//			String contents = s.next();
+//			
+//			s.close();
+//			return contents;
 			return (new Scanner(new File(doc_name)).useDelimiter("\\A").next());
 		} catch (Exception e) {
-			e.printStackTrace();
-			return null;
+			try {
+				BufferedReader r = new BufferedReader(new FileReader(doc_name));
+			    StringBuilder sb = new StringBuilder();
+			    String nextLine = "";
+
+			    while ((nextLine = r.readLine()) != null) {
+			    	nextLine = nextLine.replaceAll("[^\\p{L}\\p{Nd} \\.]+", "");
+			        sb.append(nextLine);
+			    }
+			    return sb.toString();
+			}
+			catch (Exception ex) {
+				System.out.println("Could not open document: " + doc_name + "\n\n");
+				e.printStackTrace();
+				return null;
+			}
 		}
 	}
 
