@@ -60,7 +60,7 @@ public class SnippetProcessor {
 				ret.append(delimiter);
 				delimiter = " ";
 				for (int j = 0; j < query_words.length; j++) {
-					if (words[i].equals(query_words[j])) {
+					if (words[i].toLowerCase().equals(query_words[j])) {
 						ret.append("<b>" + words[i] + "</b> ");
 						i++;
 						continue;
@@ -69,20 +69,22 @@ public class SnippetProcessor {
 				if (i < words.length) ret.append(words[i]);
 			}
 			ret.append(". ");
-			words = second_top_sentence.replaceAll("\\.", "").split(" ");
-			for (int i = 0; i < words.length; i++) {
-				ret.append(delimiter);
-				delimiter = " ";
-				for (int j = 0; j < query_words.length; j++) {
-					if (words[i].equals(query_words[j])) {
-						ret.append("<b>" + words[i] + "</b> ");
-						i++;
-						continue;
+			if (!second_top_sentence.equals("")) {
+				words = second_top_sentence.replaceAll("\\.", "").split(" ");
+				for (int i = 0; i < words.length; i++) {
+					ret.append(delimiter);
+					delimiter = " ";
+					for (int j = 0; j < query_words.length; j++) {
+						if (words[i].toLowerCase().equals(query_words[j])) {
+							ret.append("<b>" + words[i] + "</b> ");
+							i++;
+							continue;
+						}
 					}
+					if (i < words.length) ret.append(words[i]);
 				}
-				if (i < words.length) ret.append(words[i]);
+				ret.append(". ");
 			}
-			ret.append(". ");
 					
 //			System.out.println("\n");
 		}
