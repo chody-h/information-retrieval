@@ -233,20 +233,16 @@ public class SnippetProcessor {
 			significance_factor = (significance_factor.equals(Double.NaN)) ? 0 : significance_factor ;
 			score += ((significance_factor > 1) ? Math.log(significance_factor) : significance_factor / 10);
 
-			// 3 of my own
+			// 3 of my own:
+			// locality - adjacent query words within +-2 words
+			// stem the words & compare
+			// existence of complete query
 
 			return score;
 	}
 	
 	private String GetContentsOfDoc(String doc_name) {
 		try {
-//			File f = new File(doc_name);
-//			Scanner s = new Scanner(f);
-//			s.useDelimiter("\\Z");
-//			String contents = s.next();
-//			
-//			s.close();
-//			return contents;
 			return (new Scanner(new File(doc_name)).useDelimiter("\\A").next());
 		} catch (Exception e) {
 			try {
