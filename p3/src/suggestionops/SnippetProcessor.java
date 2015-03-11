@@ -7,39 +7,84 @@ import java.util.HashMap;
 import java.util.Map.Entry;
 import java.util.Scanner;
 
-import textops.TextProcessor;
-
 public class SnippetProcessor {
 	
-	private TextProcessor t;
 	private String[] query_words;
 	private String doc;
 	private int num_sentences;
 	private Double max_sentence_length_in_doc;
 
-	public SnippetProcessor(TextProcessor tp) {
-		t = tp;
+	public SnippetProcessor() {
+		
 	}
 
 	// note that this must return TWO sentences as one string.
 	// don't forget to bold query terms
 	public String GetSnippet(String doc_name, String query) {
-		if (doc_name.equals("wikidocs/Doc (15).txt")) {
-			int m = 0;
-		}
-		String ret = null;
+//		if (doc_name.equals("wikidocs/Doc (15).txt")) {
+//			int m = 0;
+//		}
+		StringBuilder ret = new StringBuilder();
 		doc = GetContentsOfDoc(doc_name);
 		query_words = query.split(" ");
 		if (doc != null) {
-			 System.out.println(doc_name + "\n");
+//			System.out.println(doc_name + "\n");
 			HashMap<String, Double> scores = ScoreDoc();
 			// place the sentences in a formatted string
+			Double highest_score = 0.0;
+			String top_sentence = "";
+			Double second_highest_score = 0.0;
+			String second_top_sentence = "";
 			for (Entry<String, Double> entry : scores.entrySet()) {
 				String sentence = entry.getKey();
 				Double score = entry.getValue();
-				 System.out.println(sentence + "\n" + score.toString());
+				if (score > highest_score) {
+					second_highest_score = highest_score;
+					second_top_sentence = top_sentence;
+
+					highest_score = score;
+					top_sentence = sentence;
+				}
+				else if (score > second_highest_score) {
+					second_highest_score = score;
+					second_top_sentence = sentence;
+				}
+//				System.out.println(sentence + "\n" + score.toString());
 			}
-			System.out.println("\n");
+			
+			ret.append(doc_name + "\n");
+
+			String delimiter = "";
+			String[] words = top_sentence.replaceAll("\\.", "").split(" ");
+			for (int i = 0; i < words.length; i++) {
+				ret.append(delimiter);
+				delimiter = " ";
+				for (int j = 0; j < query_words.length; j++) {
+					if (words[i].equals(query_words[j])) {
+						ret.append("<b>" + words[i] + "</b> ");
+						i++;
+						continue;
+					}
+				}
+				if (i < words.length) ret.append(words[i]);
+			}
+			ret.append(". ");
+			words = second_top_sentence.replaceAll("\\.", "").split(" ");
+			for (int i = 0; i < words.length; i++) {
+				ret.append(delimiter);
+				delimiter = " ";
+				for (int j = 0; j < query_words.length; j++) {
+					if (words[i].equals(query_words[j])) {
+						ret.append("<b>" + words[i] + "</b> ");
+						i++;
+						continue;
+					}
+				}
+				if (i < words.length) ret.append(words[i]);
+			}
+			ret.append(". ");
+					
+//			System.out.println("\n");
 		}
 		
 		query_words = null;
@@ -47,7 +92,7 @@ public class SnippetProcessor {
 		num_sentences = 0;
 		max_sentence_length_in_doc = null;
 
-		return ret;
+		return ret.toString();
 	}
 
 	private HashMap<String, Double> ScoreDoc() {
@@ -211,6 +256,7 @@ public class SnippetProcessor {
 			    	nextLine = nextLine.replaceAll("[^\\p{L}\\p{Nd} \\.]+", "");
 			        sb.append(nextLine);
 			    }
+			    r.close();
 			    return sb.toString();
 			}
 			catch (Exception ex) {

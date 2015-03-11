@@ -3,7 +3,6 @@ package suggestionops;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
-
 import textops.Dictionary;
 import textops.TextProcessor;
 import textops.Util;
@@ -25,6 +24,16 @@ public class QueryAnalyzer {
 		queries = new HashMap<String, String>();
 		corrections = new HashMap<String, Integer>();
 		misspelled = new HashMap<String, HashMap<String, Integer>>();
+	}
+
+	public String[] Possible(String e) {
+		HashMap<String, Integer> possibilities = misspelled.get(e);
+		String[] ret = new String[possibilities.size()];
+		int i = 0;
+		for (String key : possibilities.keySet()) {
+			ret[i++] = key;
+		}
+		return ret;
 	}
 	
 	public String Correct(String query) {
@@ -124,7 +133,7 @@ public class QueryAnalyzer {
 				score = (double) (a/b);
 				score *= (double) (c/d);
 			}
-			it.remove();
+//			it.remove();
 			if (score > highestScore) {
 				highestScore = score;
 				ret = w;

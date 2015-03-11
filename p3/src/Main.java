@@ -82,23 +82,22 @@ public class Main {
 		
 //		spell check queries
 		String[] corrections = new String[queries.length];
-		ArrayList<int[]> index = new ArrayList<int[]>();	// specifies whether or not the word at the index was misspelled
+		String[] misspelled_soundex_codes = new String[queries.length];
+		ArrayList<String[]> suggestedWords = new ArrayList<String[]>();
 		for (int i = 0; i < queries.length; i++) {
 			corrections[i] = q.Correct(queries[i]);
 			
 			String[] words = queries[i].split(" ");
-			int[] temp = new int[words.length];
 			for (int j = 0; j < words.length; j++)
-				if (d.ContainsWord(words[j]))
-					temp[j] = 0;
-				else
-					temp[j] = 1;
-			index.add(temp);
+				if (!d.ContainsWord(words[j])) {
+					misspelled_soundex_codes[i] = Util.Soundex(words[j]);
+					suggestedWords.add(q.Possible(queries[i].split(" ")[j]));
+				}
 		}
 		
 //		retrieve top 5 documents from collection with snippets
 		QueryProcessor qp = new QueryProcessor(t);
-		SnippetProcessor sp = new SnippetProcessor(t);
+		SnippetProcessor sp = new SnippetProcessor();
 		Results[] results = new Results[queries.length];
 		String[][] snippets = new String[queries.length][5];
 		// process each query
@@ -113,9 +112,21 @@ public class Main {
 					snippets[i][j] = "ERROR";
 			}
 		}
-		
-		
 
+//		print output
+		for (int i = 0; i < queries.length; i++) {
+			System.out.println("<b>Original query:</b> " + queries[i] + "\t" + "<b>Corrected Query:</b> " + corrections[i]);
+			System.out.println("<b>Soundex code:</b> " + misspelled_soundex_codes[i]);
+			System.out.print("<b>Suggested corrections:</b> ");
+			String delimiter = "";
+			for (int j = 0; j < suggestedWords.get(i).length; j++) {
+				System.out.print(delimiter + suggestedWords.get(i)[j]);
+				delimiter = ", ";
+			}
+			for (int j = 0; j < 5; j++) {
+				System.out.println("\n" + snippets[i][j]);
+			}
+		}
 	}
 
 	
