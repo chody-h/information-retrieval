@@ -114,6 +114,7 @@ public class Main {
 		}
 
 //		print output
+		System.out.println("<!DOCTYPE html><html><head>	<title></title></head><body><table><pre>");
 		for (int i = 0; i < queries.length; i++) {
 			System.out.println("<b>Original query:</b> " + queries[i] + "\t" + "<b>Corrected Query:</b> " + corrections[i]);
 			System.out.println("<b>Soundex code:</b> " + misspelled_soundex_codes[i]);
@@ -123,10 +124,13 @@ public class Main {
 				System.out.print(delimiter + suggestedWords.get(i)[j]);
 				delimiter = ", ";
 			}
+			System.out.println();
 			for (int j = 0; j < 5; j++) {
 				System.out.println("\n" + snippets[i][j]);
 			}
+			System.out.println("\n\n==============================================================================================\n\n");
 		}
+		System.out.println("</pre></body><style>pre {    width: 60em;    white-space: pre-wrap;    font-size: 1.1em;}</style></html>");
 	}
 
 	

@@ -3,9 +3,13 @@ package suggestionops;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map.Entry;
 import java.util.Scanner;
+
+import textops.PorterStemmer;
+import textops.StopWords;
 
 public class SnippetProcessor {
 	
@@ -13,17 +17,17 @@ public class SnippetProcessor {
 	private String doc;
 	private int num_sentences;
 	private Double max_sentence_length_in_doc;
+	private StopWords s;
+	private PorterStemmer p;
 
 	public SnippetProcessor() {
-		
+		s = new StopWords();
+		p = new PorterStemmer();
 	}
 
 	// note that this must return TWO sentences as one string.
 	// don't forget to bold query terms
 	public String GetSnippet(String doc_name, String query) {
-//		if (doc_name.equals("wikidocs/Doc (15).txt")) {
-//			int m = 0;
-//		}
 		StringBuilder ret = new StringBuilder();
 		doc = GetContentsOfDoc(doc_name);
 		query_words = query.split(" ");
@@ -60,7 +64,7 @@ public class SnippetProcessor {
 				ret.append(delimiter);
 				delimiter = " ";
 				for (int j = 0; j < query_words.length; j++) {
-					if (words[i].toLowerCase().equals(query_words[j])) {
+					if (i < words.length && !s.contains(words[i].toLowerCase()) && p.stem(words[i].toLowerCase()).equals(p.stem(query_words[j]))) {
 						ret.append("<b>" + words[i] + "</b> ");
 						i++;
 						continue;
@@ -75,7 +79,7 @@ public class SnippetProcessor {
 					ret.append(delimiter);
 					delimiter = " ";
 					for (int j = 0; j < query_words.length; j++) {
-						if (words[i].toLowerCase().equals(query_words[j])) {
+						if (i < words.length && !s.contains(words[i]) && p.stem(words[i].toLowerCase()).equals(p.stem(query_words[j]))) {
 							ret.append("<b>" + words[i] + "</b> ");
 							i++;
 							continue;
@@ -153,7 +157,7 @@ public class SnippetProcessor {
 			for (int j = 0; j < markers.length; j++)
 				if (markers[j].equals("s"))
 					query_count++;
-			query_count = (query_count < 2) ? 0.35 : Math.log(query_count);
+			query_count = (query_count < 2) ? 0.05 : Math.log(query_count);
 			score += query_count / ((double)query_words.length) * max_sentence_length_in_doc / ((double)words.length);
 
 			// # unique query terms in sentence
@@ -165,7 +169,7 @@ public class SnippetProcessor {
 						k = (j == query_words.length-1) ? words.length : -1; 
 						j++;
 					}
-			unique_query_count = (unique_query_count < 2) ? 0.35 : Math.log(unique_query_count) ;
+			unique_query_count = (unique_query_count < 2) ? 0.05 : Math.log(unique_query_count) ;
 			score += unique_query_count / ((double)query_words.length);
 
 			// longest contiguous run of query words in sentence
@@ -179,7 +183,7 @@ public class SnippetProcessor {
 				else 
 					current_longest = 0;
 			}
-			score += longest * (double)query_words.length / ((double)words.length);
+			score += Math.log(longest) / Math.log((double)words.length);
 
 			// density measure of query words (i.e., significance factor on query words in sentences)
 			// preprocess markers: get rid of trailing w's, leading w's, and 5+ w's in a row
@@ -236,7 +240,55 @@ public class SnippetProcessor {
 			// 3 of my own:
 			// locality - adjacent query words within +-2 words
 			// stem the words & compare
-			// existence of complete query
+			Double stem_count = 0.0;
+			String[] stemmed_query = new String[query_words.length];
+			String[] stemmed_words = new String[words.length];
+			for (j = 0; j < query_words.length; j++) {
+				stemmed_query[j] = p.stem(query_words[j].toLowerCase());
+				for (int k = 0; k < words.length; k++) {
+					stemmed_words[k] = p.stem(words[k].toLowerCase());
+					if (stemmed_words[k].equals(stemmed_query[j])) {
+						stem_count++;
+					}
+				}
+			}
+			stem_count = (stem_count < 2) ? 0.1 : Math.log(stem_count) ;
+			score += stem_count / words.length;
+			
+			// non-stopwords
+			Double sw_count = 0.0;
+			ArrayList<String> sw_query = new ArrayList<String>();
+			for (j = 0; j < query_words.length; j++) {
+				if (!s.contains(query_words[j])) {
+					sw_query.add(stemmed_query[j]);
+				}
+			}
+			for (j = 0; j < sw_query.size(); j++) {
+				for (int k = 0; k < stemmed_words.length; k++) {
+					if (!s.contains(words[k]) && sw_query.get(j).equals(stemmed_words[k])) {
+						sw_count++;
+					}
+				}
+			}
+			sw_count = (sw_count < 2) ? 0.1 : Math.log(sw_count*2) ;
+			score += sw_count;
+			
+			// existence of complete query. stemming allowed
+			for (j = 0; j < stemmed_words.length; j++) {
+				if (stemmed_words[j].equals(stemmed_query[0])) {
+					boolean full_query = true;
+					for (int a = j, b = 0; (a < stemmed_words.length) && (b < stemmed_query.length); a++, b++) {
+						if (!stemmed_words[a].equals(stemmed_query[b])) {
+							full_query = false;
+							break;
+						}
+					}
+					if (full_query) {
+						score += 1.0;
+						break;
+					}
+				}
+			}
 
 			return score;
 	}

@@ -3,7 +3,9 @@ package suggestionops;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+
 import textops.Dictionary;
+import textops.PorterStemmer;
 import textops.TextProcessor;
 import textops.Util;
 
@@ -128,7 +130,7 @@ public class QueryAnalyzer {
 			if (Util.EditDistance(e, w) <= 2) {
 				Double a = (double) count;
 				Double b = (double) corrections.get(w);
-				Double c = (double) t.FindFrequencyByDocument(w, -1);
+				Double c = (double) t.FindFrequencyByDocument(t.stemmer.stem(w), -1);
 				Double d = (double) t.WordCount(0);
 				score = (double) (a/b);
 				score *= (double) (c/d);

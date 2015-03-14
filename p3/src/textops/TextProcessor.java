@@ -7,7 +7,7 @@ public class TextProcessor {
 	
 	private static int NUM_DOCS_TO_PROCESS = 322;
 	private StopWords stopwords;
-//	private PorterStemmer stemmer;
+	public PorterStemmer stemmer;
 	private Map<String, int[]> index;
 //				word	index: doc_id
 //						value: freq_of_occur
@@ -17,7 +17,7 @@ public class TextProcessor {
 	public TextProcessor() {
 //		0. Init stuff that won't change doc by doc
 		stopwords = new StopWords();
-//		stemmer = new PorterStemmer();
+		stemmer = new PorterStemmer();
 		index = new HashMap<String, int[]>();
 		wordcount = new int[NUM_DOCS_TO_PROCESS];
 		max_freq_of_doc = null;
@@ -205,10 +205,10 @@ public class TextProcessor {
 			}
 			
 //			3. Stem remaining words
-//			String temp = stemmer.stem(words[i]);
-//			if (temp != "Invalid term") {
-//				words[i] = temp;
-//			}
+			String temp = stemmer.stem(words[i]);
+			if (temp != "Invalid term") {
+				words[i] = temp;
+			}
 		}
 		
 		return words;
