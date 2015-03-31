@@ -4,7 +4,11 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FilenameFilter;
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.Map.Entry;
 import java.util.Scanner;
+
+import textops.StopWords;
 
 public class MNBclassification {
 	// name of the collection
@@ -17,6 +21,10 @@ public class MNBclassification {
 	private File[] DC_test;
 	// total number of files in the DC
 	private int DC_size;
+	// complete vocabulary of DC: <word, IG>
+	private LinkedHashMap<String, Double> v;
+	
+	private StopWords sw = new StopWords();
 	
 //	remove stopwords
 //	partition into two subsets, training & test
@@ -41,7 +49,19 @@ public class MNBclassification {
 		
 		Partition();
 		
-		ParseFiles(DC_training);
+		v = GetVocab(DC_training);
+		if (v.size() < 100) System.out.println("Vocab: " + v);
+		else {
+			System.out.printf("First 100 of %d features in the collection's vocab: {", v.size());
+			String delim = "";
+			int count = 0;
+			for (Entry<String, Double> entry : v.entrySet()) {
+				if (count++ == 100) break;
+				System.out.printf("%s%s=%2.2f", delim, entry.getKey(), entry.getValue());
+				delim = ", ";
+			}
+			System.out.println("}");
+		}
 	}
 
 	// partition files into two subsets
@@ -77,25 +97,36 @@ public class MNBclassification {
 	}
 	
 	// parse files to gather vocabulary
-	private void ParseFiles(File[] set) {
-		System.out.println("Parsing files.");
-		Scanner s;
-//		for (File f : set) {
+	private LinkedHashMap<String, Double> GetVocab(File[] set) {
+		Scanner s = null;
+		LinkedHashMap<String, Double> vocab = new LinkedHashMap<String, Double>();
+		for (File f : set) {
 			try {
-				System.out.println(set[0].getPath());
-				s = new Scanner(set[0]);
-				String line;
+//				System.out.println("File: " + f.getPath());
+				s = new Scanner(f);
 				if (DC.getName().equals("20NG")) {
 					s.useDelimiter("\n\n");
-					while (s.hasNext()) {
-						System.out.println(s.next()+"--------------------------------------");
+					if (s.hasNext()) {
+						s.next();
+					}
+				}
+				s.useDelimiter("\\s");
+				String word;
+				while (s.hasNext()) {
+					word = s.next();
+					word = word.replaceAll("[^a-zA-Z0-9]", "").toLowerCase();
+					if (!word.equals("") && !sw.contains(word)) {
+						vocab.put(word, 0.0);
 					}
 				}
 			} catch (FileNotFoundException e) {
-				System.out.println("Error opening file " + set[0].getPath()+"/"+set[0].getName());
-//				continue;
+				System.out.println("Error opening file " + f.getPath()+"/"+f.getName());
+				continue;
 			}
-//		}
+//			break;
+		}
+		if (s != null) s.close();
+		return vocab;
 	}
 	
 ////	determine which words to represent documents in training&test set based on IG
