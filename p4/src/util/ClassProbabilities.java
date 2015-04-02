@@ -6,7 +6,7 @@ public class ClassProbabilities {
 //	<class, probability>
 	private HashMap<String, Double> p;
 	
-	ClassProbabilities(HashMap<String, Double> m) {
+	public ClassProbabilities(HashMap<String, Double> m) {
 		p = m;
 	}
 }

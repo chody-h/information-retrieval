@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map.Entry;
 
+import util.ClassProbabilities;
 import util.WordProbabilities;
 
 public class MNBprobability {	
@@ -49,7 +50,7 @@ public class MNBprobability {
 			int totalCount = 0;
 			HashMap<String, Double> wordCounts = entry.getValue();
 			for (Entry<String, Double> words : wordCounts.entrySet()) {
-				String word = words.getKey();
+//				String word = words.getKey();
 				Double count = words.getValue();
 				totalCount += count;
 			}
@@ -68,8 +69,22 @@ public class MNBprobability {
 	
 //	compute probability of each class in C
 //	return ClassProbabilities: each class and its probability (hashmap?)
-	private void ComputeClassProbability(File[] set) {
+	private ClassProbabilities ComputeClassProbability(HashMap<String, Double> classCounts) {
+		int numDocs = 0;
+		for (Entry<String, Double> entry : classCounts.entrySet()) {
+//			String className = entry.getKey();
+			Double docCount = entry.getValue();
+			numDocs += docCount;
+		}
+		for (Entry<String, Double> entry : classCounts.entrySet()) {
+			String className = entry.getKey();
+			Double docCount = entry.getValue();
+			Double probability = docCount / numDocs;
+			classCounts.put(className, probability);
+		}
 		
+		ClassProbabilities ret = new ClassProbabilities(classCounts);
+		return ret;
 	}
 	
 //	retrieves probability of word in class
