@@ -8,6 +8,7 @@ import java.util.LinkedHashMap;
 import java.util.Map.Entry;
 import java.util.Scanner;
 
+import textops.PorterStemmer;
 import textops.StopWords;
 
 public class MNBclassification {
@@ -116,6 +117,7 @@ public class MNBclassification {
 					word = s.next();
 					word = word.replaceAll("[^a-zA-Z0-9]", "").toLowerCase();
 					if (!word.equals("") && !sw.contains(word)) {
+						word = PorterStemmer.stem(word);
 						vocab.put(word, 0.0);
 					}
 				}
