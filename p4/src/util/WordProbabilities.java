@@ -1,5 +1,7 @@
 package util;
 
-public class WordProbabilities {
+import java.util.HashMap;
 
+public class WordProbabilities {
+	private HashMap<String, HashMap<String, Double>> p;
 }

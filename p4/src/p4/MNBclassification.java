@@ -105,12 +105,8 @@ public class MNBclassification {
 			try {
 //				System.out.println("File: " + f.getPath());
 				s = new Scanner(f);
-				if (DC.getName().equals("20NG")) {
-					s.useDelimiter("\n\n");
-					if (s.hasNext()) {
-						s.next();
-					}
-				}
+				s.useDelimiter("\n\n");
+				if (s.hasNext()) s.next();
 				s.useDelimiter("\\s");
 				String word;
 				while (s.hasNext()) {
