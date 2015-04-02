@@ -10,6 +10,7 @@ import java.util.Scanner;
 
 import textops.PorterStemmer;
 import textops.StopWords;
+import util.Utilities;
 
 public class MNBclassification {
 	// name of the collection
@@ -17,13 +18,17 @@ public class MNBclassification {
 	// names of each class. to get the directory name: DC+"/"+classes[i]
 	private File[] classes;
 	// names of each file assigned to training
-	private File[] DC_training;
+	private File[] DC_training_files;
 	// names of each file assigned to test
-	private File[] DC_test;
+	private File[] DC_test_files;
 	// total number of files in the DC
 	private int DC_size;
 	// complete vocabulary of DC: <word, IG>
 	private LinkedHashMap<String, Double> v;
+	// storage of training document vectors sorted by class - <class, <word, count>>
+	private LinkedHashMap<File, LinkedHashMap<String, Double>> DC_training;
+	// storage of test document vectors sorted by class - <class, <word, count>>
+	private LinkedHashMap<File, LinkedHashMap<String, Double>> DC_test;
 	
 	private StopWords sw = new StopWords();
 	
@@ -50,7 +55,7 @@ public class MNBclassification {
 		
 		Partition();
 		
-		v = GetVocab(DC_training);
+		v = Utilities.GetVocab(DC_training_files);
 		if (v.size() < 100) System.out.println("Vocab: " + v);
 		else {
 			System.out.printf("First 100 of %d features in the collection's vocab: {", v.size());
@@ -63,6 +68,8 @@ public class MNBclassification {
 			}
 			System.out.println("}");
 		}
+		
+		DC_training = Utilities.GetDocumentVectors(DC_training_files);
 	}
 
 	// partition files into two subsets
@@ -72,22 +79,27 @@ public class MNBclassification {
 		ArrayList<File> DCtest = new ArrayList<File>();
 		for (File c : classes) {
 			File[] listings = c.listFiles();
-			int num_in_class = 0;
-			int max_per_class = (int) Math.floor(listings.length*0.8);
+			int num_in_training = 0;
+			int max_train = (int) Math.floor(listings.length*0.8);
+			int num_in_test = 0;
+			int max_test = listings.length - max_train;
 			for (File f : listings) {
-				if ((DCtraining.size() < training && num_in_class < max_per_class && Math.random() < 0.8) || DCtest.size() >= DC_size-training) {
-					num_in_class++;
+				if ((DCtraining.size() < training && num_in_training < max_train && Math.random() < 0.8) || num_in_test >= max_test) {
+					num_in_training++;
 					DCtraining.add(f);
 				}
 				else {
+					num_in_test++;
 					DCtest.add(f);
 				}
 			}
+			assert(num_in_training == max_train);
+			assert(num_in_test == max_test);
 		}
-		DC_training = DCtraining.toArray(new File[DCtraining.size()]);
-		DC_test = DCtest.toArray(new File[DCtest.size()]);
+		DC_training_files = DCtraining.toArray(new File[DCtraining.size()]);
+		DC_test_files = DCtest.toArray(new File[DCtest.size()]);
 		
-		System.out.printf("Placed %d files in DC_training and %d files in DC_test.\n", DC_training.length, DC_test.length);
+		System.out.printf("Placed %d files in DC_training and %d files in DC_test.\n", DC_training_files.length, DC_test_files.length);
 //		for (File f : DC_training) {
 //			System.out.println(f.getName());
 //		}
@@ -95,36 +107,6 @@ public class MNBclassification {
 //		for (File f : DC_test) {
 //			System.out.println(f.getName());
 //		}
-	}
-	
-	// parse files to gather vocabulary
-	private LinkedHashMap<String, Double> GetVocab(File[] set) {
-		Scanner s = null;
-		LinkedHashMap<String, Double> vocab = new LinkedHashMap<String, Double>();
-		for (File f : set) {
-			try {
-//				System.out.println("File: " + f.getPath());
-				s = new Scanner(f);
-				s.useDelimiter("\n\n");
-				if (s.hasNext()) s.next();
-				s.useDelimiter("\\s");
-				String word;
-				while (s.hasNext()) {
-					word = s.next();
-					word = word.replaceAll("[^a-zA-Z0-9]", "").toLowerCase();
-					if (!word.equals("") && !sw.contains(word)) {
-						word = PorterStemmer.stem(word);
-						vocab.put(word, 0.0);
-					}
-				}
-			} catch (FileNotFoundException e) {
-				System.out.println("Error opening file " + f.getPath()+"/"+f.getName());
-				continue;
-			}
-//			break;
-		}
-		if (s != null) s.close();
-		return vocab;
 	}
 	
 ////	determine which words to represent documents in training&test set based on IG

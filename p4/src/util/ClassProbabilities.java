@@ -9,4 +9,8 @@ public class ClassProbabilities {
 	public ClassProbabilities(HashMap<String, Double> m) {
 		p = m;
 	}
+	
+	public Double GetProbability(String c) {
+		return p.get(c);
+	}
 }
