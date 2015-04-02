@@ -9,7 +9,24 @@ import util.ClassProbabilities;
 import util.WordProbabilities;
 
 public class MNBprobability {	
-	MNBprobability(){}
+	
+	private WordProbabilities wp;
+	private ClassProbabilities cp;
+	
+	MNBprobability(LinkedHashMap<File, LinkedHashMap<String, Integer>> training_set, int vocabSize) {
+		wp = ComputeWordProbability(training_set, vocabSize);
+		
+		HashMap<String, Double> classCounts = new HashMap<String, Double>();
+		for (Entry<File, LinkedHashMap<String, Integer>> entry : training_set.entrySet()) {
+			File doc = entry.getKey();
+			String className = doc.getParent();
+			className = className.substring(className.lastIndexOf("\\") + 1, className.length());
+			LinkedHashMap<String, Integer> documentVector = entry.getValue();
+			Double classCount = documentVector.size() + 0.0;
+			classCounts.put(className, classCount);
+		}
+		cp = ComputeClassProbability(classCounts);
+	}
 	
 //	compute probability of each word in each class using training set
 //	use Laplacian Smoothed Estimate (slide 16)
