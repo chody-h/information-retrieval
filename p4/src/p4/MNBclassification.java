@@ -1,14 +1,11 @@
 package p4;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FilenameFilter;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.Map.Entry;
-import java.util.Scanner;
 
-import textops.PorterStemmer;
 import textops.StopWords;
 import util.Utilities;
 
@@ -26,9 +23,9 @@ public class MNBclassification {
 	// complete vocabulary of DC: <word, IG>
 	private LinkedHashMap<String, Double> v;
 	// storage of training document vectors sorted by class - <class, <word, count>>
-	private LinkedHashMap<File, LinkedHashMap<String, Double>> DC_training;
+	private LinkedHashMap<File, LinkedHashMap<String, Integer>> DC_training;
 	// storage of test document vectors sorted by class - <class, <word, count>>
-	private LinkedHashMap<File, LinkedHashMap<String, Double>> DC_test;
+	private LinkedHashMap<File, LinkedHashMap<String, Integer>> DC_test;
 	
 	private StopWords sw = new StopWords();
 	
@@ -74,28 +71,48 @@ public class MNBclassification {
 
 	// partition files into two subsets
 	private void Partition() {
-		int training = (int) Math.floor(DC_size*0.8);
 		ArrayList<File> DCtraining = new ArrayList<File>();
 		ArrayList<File> DCtest = new ArrayList<File>();
-		for (File c : classes) {
-			File[] listings = c.listFiles();
-			int num_in_training = 0;
-			int max_train = (int) Math.floor(listings.length*0.8);
-			int num_in_test = 0;
-			int max_test = listings.length - max_train;
-			for (File f : listings) {
-				if ((DCtraining.size() < training && num_in_training < max_train && Math.random() < 0.8) || num_in_test >= max_test) {
-					num_in_training++;
-					DCtraining.add(f);
-				}
-				else {
-					num_in_test++;
-					DCtest.add(f);
+		if (DC.getName().equals("test")) {
+			for (File c : classes) {
+				File[] listings = c.listFiles();
+				for (File f : listings) {
+					int number = Integer.parseInt(f.getName().split("\\.txt")[0]);
+					if (number <= 6) {
+						DCtraining.add(f);
+					}
+					else if (number == 7) {
+						DCtest.add(f);
+					}
+					else {
+						// extra files
+					}
 				}
 			}
-			assert(num_in_training == max_train);
-			assert(num_in_test == max_test);
 		}
+		else {
+			int training = (int) Math.floor(DC_size*0.8);
+			for (File c : classes) {
+				File[] listings = c.listFiles();
+				int num_in_training = 0;
+				int max_train = (int) Math.floor(listings.length*0.8);
+				int num_in_test = 0;
+				int max_test = listings.length - max_train;
+				for (File f : listings) {
+					if ((DCtraining.size() < training && num_in_training < max_train && Math.random() < 0.8) || num_in_test >= max_test) {
+						num_in_training++;
+						DCtraining.add(f);
+					}
+					else {
+						num_in_test++;
+						DCtest.add(f);
+					}
+				}
+				assert(num_in_training == max_train);
+				assert(num_in_test == max_test);
+			}
+		}
+		
 		DC_training_files = DCtraining.toArray(new File[DCtraining.size()]);
 		DC_test_files = DCtest.toArray(new File[DCtest.size()]);
 		
@@ -122,4 +139,16 @@ public class MNBclassification {
 //	private void label(Document in test_set) {
 //		
 //	}
+	
+	public int getVocabSize() {
+		return v.size();
+	}
+
+	public LinkedHashMap<File, LinkedHashMap<String, Integer>> getDCTraining() {
+		return DC_training;
+	}
+	
+	public LinkedHashMap<File, LinkedHashMap<String, Integer>> getDCTest() {
+		return DC_test;
+	}
 }

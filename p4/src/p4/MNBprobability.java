@@ -40,7 +40,7 @@ public class MNBprobability {
 			File doc = entry.getKey();
 			// get the name of the class the file is classified in
 			String className = doc.getParent();
-			className = className.substring(className.lastIndexOf("\\") + 1, className.length());
+			className = className.substring(className.lastIndexOf("/") + 1, className.length());
 			// each word and its count
 			HashMap<String, Double> wordCountsByClass;
 			if (classes.containsKey(className))
