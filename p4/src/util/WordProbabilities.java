@@ -17,10 +17,24 @@ public class WordProbabilities {
 //	}
 	
 	public Double GetProbability(String w, String c) {
-		return p.get(w).get(c);
+		LinkedHashMap<String, Double> temp = p.get(w);
+		if (temp != null) {
+			Double val = temp.get(c);
+			if (val != null) {
+				return val;
+			}
+		}
+		return 0.0;
 	}
 	
 	public Double GetNotProbability(String w, String c) {
-		return np.get(w).get(c);
+		LinkedHashMap<String, Double> temp = np.get(w);
+		if (temp != null) {
+			Double val = temp.get(c);
+			if (val != null) {
+				return val;
+			}
+		}
+		return 0.0;
 	}
 }

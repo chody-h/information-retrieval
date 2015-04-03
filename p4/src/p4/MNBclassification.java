@@ -135,9 +135,7 @@ public class MNBclassification {
 //	determine which words to represent documents in training&test set based on IG
 //	if M >= size of vocab, apply no feature selection
 //	return selectedFeatures
-	public LinkedHashMap<String, Double> featureSelection(int M, MNBprobability p) {
-		if (M >= v.size()) return v;
-		
+	public LinkedHashMap<String, Double> featureSelection(int M, MNBprobability p) {		
 		for (Entry<String, Double> words : v.entrySet()) {
 			String word = words.getKey();
 			Double IG = CalculateIG(word, p);
@@ -148,13 +146,13 @@ public class MNBclassification {
 				  new ArrayList<Map.Entry<String, Double>>(v.entrySet());
 		Collections.sort(entries, new Comparator<Map.Entry<String, Double>>() {
 			public int compare(Map.Entry<String, Double> a, Map.Entry<String, Double> b){
-				return a.getValue().compareTo(b.getValue());
+				return b.getValue().compareTo(a.getValue());
 			}
 		});
 		LinkedHashMap<String, Double> sortedMap = new LinkedHashMap<String, Double>();
 		int count = 0;
 		for (Map.Entry<String, Double> entry : entries) {
-			if (count > M) {
+			if (count >= M) {
 				break;
 			}
 			sortedMap.put(entry.getKey(), entry.getValue());
@@ -164,25 +162,31 @@ public class MNBclassification {
 	}
 	
 	private Double CalculateIG(String w, MNBprobability p) {
+		int logBase = 2;
 		Double IG = 0.0;
 		
 		String[] classNames = Utilities.GetClassNames(DC);
 		for (String c : classNames) {
 			Double Pc = p.GetClassProbability(c);
+if (w.equals("cheap")) System.out.printf("\tP(%s): %2.2f\n", c, Pc);
 			if (Pc == 0.0) IG += 0;
-			else IG += (-1 * Pc * Math.log(Pc)/Math.log(2));
+			else IG += (-1 * Pc * Math.log(Pc)/Math.log(logBase));
 		}
 		Double Pw = v.get(w)/DC_training.size();
+if (w.equals("cheap")) System.out.printf("\tP(%s): %2.2f\n", w, Pw);
 		for (String c : classNames) {
 			Double Pcw = p.GetWordProbability(w, c);
+if (w.equals("cheap")) System.out.printf("\tP(%s|%s): %2.2f\n", c, w, Pcw);
 			if (Pcw == 0.0) IG += 0;
-			else IG += (Pw * Pcw * Math.log(Pcw)/Math.log(2));
+			else IG += (Pw * Pcw * Math.log(Pcw)/Math.log(logBase));
 		}
 		Double Pnw = 1-Pw;
+if (w.equals("cheap")) System.out.printf("\tP(!%s): %2.2f\n", w, Pnw);
 		for (String c : classNames) {
 			Double Pcnw = p.GetNotWordProbability(w, c);
+if (w.equals("cheap")) System.out.printf("\tP(%s|!%s): %2.2f\n", c, w, Pcnw);
 			if (Pcnw == 0.0) IG += 0;
-			else IG += (Pnw * Pcnw * Math.log(Pcnw)/Math.log(2));
+			else IG += (Pnw * Pcnw * Math.log(Pcnw)/Math.log(logBase));
 		}
 		return IG;
 	}
