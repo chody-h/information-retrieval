@@ -13,16 +13,18 @@ public class MNBprobability {
 	private WordProbabilities wp;
 	private ClassProbabilities cp;
 	
-	MNBprobability(LinkedHashMap<File, LinkedHashMap<String, Integer>> training_set, int vocabSize) {
-		wp = ComputeWordProbability(training_set, vocabSize);
+	MNBprobability(LinkedHashMap<File, LinkedHashMap<String, Integer>> training_set, LinkedHashMap<String, Double> vocab) {
+		wp = ComputeWordProbability(training_set, vocab);
 		
 		HashMap<String, Double> classCounts = new HashMap<String, Double>();
 		for (Entry<File, LinkedHashMap<String, Integer>> entry : training_set.entrySet()) {
 			File doc = entry.getKey();
 			String className = doc.getParent();
-			className = className.substring(className.lastIndexOf("\\") + 1, className.length());
-			LinkedHashMap<String, Integer> documentVector = entry.getValue();
-			Double classCount = documentVector.size() + 0.0;
+			className = className.substring(className.lastIndexOf("/") + 1, className.length());
+//			LinkedHashMap<String, Integer> documentVector = entry.getValue();
+//			Double classCount = documentVector.size() + 0.0;
+			Double classCount = 1.0;
+			if (classCounts.containsKey(className)) classCount += classCounts.get(className);
 			classCounts.put(className, classCount);
 		}
 		cp = ComputeClassProbability(classCounts);
@@ -31,7 +33,7 @@ public class MNBprobability {
 //	compute probability of each word in each class using training set
 //	use Laplacian Smoothed Estimate (slide 16)
 //	return WordProbabilities: each word and its probability (hashmap?)
-	private WordProbabilities ComputeWordProbability(LinkedHashMap<File, LinkedHashMap<String, Integer>> training_set, int vocabSize) {
+	private WordProbabilities ComputeWordProbability(LinkedHashMap<File, LinkedHashMap<String, Integer>> training_set, LinkedHashMap<String, Double> vocab) {
 		// stores each word's count by class
 		HashMap<String, HashMap<String, Double>> classes = new HashMap<String, HashMap<String, Double>>();
 		// iterate over every file
@@ -71,10 +73,11 @@ public class MNBprobability {
 				Double count = words.getValue();
 				totalCount += count;
 			}
-			for (Entry<String, Double> words : wordCounts.entrySet()) {
+			for (Entry<String, Double> words : vocab.entrySet()) {
 				String word = words.getKey();
-				Double count = words.getValue();
-				Double probability = (count + 1) / (totalCount + vocabSize);
+				Double count = 0.0;
+				if (wordCounts.containsKey(word)) count = wordCounts.get(word);
+				Double probability = (count + 1) / (totalCount + vocab.size());
 				wordCounts.put(word, probability);
 			}
 			classes.put(className, wordCounts);

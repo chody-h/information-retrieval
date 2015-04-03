@@ -140,8 +140,8 @@ public class MNBclassification {
 //		
 //	}
 	
-	public int getVocabSize() {
-		return v.size();
+	public LinkedHashMap<String, Double> getVocab() {
+		return v;
 	}
 
 	public LinkedHashMap<File, LinkedHashMap<String, Integer>> getDCTraining() {
