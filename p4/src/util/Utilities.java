@@ -2,6 +2,7 @@ package util;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FilenameFilter;
 import java.util.LinkedHashMap;
 import java.util.Map.Entry;
 import java.util.Scanner;
@@ -21,8 +22,8 @@ public class Utilities {
 			LinkedHashMap<String, Integer> temp = ParseFile(f);
 			for (Entry<String, Integer> entry : temp.entrySet()) {
 				String word = entry.getKey();
-				Double value = entry.getValue() + 0.0;
-				if (vocab.containsKey(word)) value += vocab.get(word);
+				Double value = 1.0;
+				if (vocab.containsKey(word)) value = vocab.get(word) + 1;
 				vocab.put(word, value);
 			}
 //			break;
@@ -74,5 +75,14 @@ public class Utilities {
 		String className = f.getParent();
 		className = className.substring(className.lastIndexOf("/") + 1, className.length());
 		return className;
+	}
+	
+	public static String[] GetClassNames(File f) {
+		return f.list(new FilenameFilter() {
+			@Override
+			public boolean accept(File current, String name) {
+				return new File(current, name).isDirectory();
+			}
+		});
 	}
 }

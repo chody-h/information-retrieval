@@ -1,7 +1,6 @@
 package p4;
 
 import java.io.File;
-import java.io.FilenameFilter;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -24,7 +23,7 @@ public class MNBclassification {
 	private File[] DC_test_files;
 	// total number of files in the DC
 	private int DC_size;
-	// complete vocabulary of DC: <word, IG>
+	// complete vocabulary of DC: intially = <word, num_documents_it's_in>, then = <word, IG>
 	private LinkedHashMap<String, Double> v;
 	// storage of training document vectors sorted by class - <class, <word, count>>
 	private LinkedHashMap<File, LinkedHashMap<String, Integer>> DC_training;
@@ -38,12 +37,7 @@ public class MNBclassification {
 //	be able to apply feature selection
 	MNBclassification(String dc) {
 		DC = new File(dc);
-		String[] classnames = DC.list(new FilenameFilter() {
-			@Override
-			public boolean accept(File current, String name) {
-				return new File(current, name).isDirectory();
-			}
-		});
+		String[] classnames = Utilities.GetClassNames(DC);
 		// open all classes as files and count the number of documents
 		ArrayList<File> classFiles = new ArrayList<File>();
 		DC_size = 0;
@@ -133,8 +127,14 @@ public class MNBclassification {
 //	determine which words to represent documents in training&test set based on IG
 //	if M >= size of vocab, apply no feature selection
 //	return selectedFeatures
-	public LinkedHashMap<String, Double> featureSelection(int M) {
+	public LinkedHashMap<String, Double> featureSelection(int M, MNBprobability p) {
 		if (M >= v.size()) return v;
+		
+		for (Entry<String, Double> words : v.entrySet()) {
+			String word = words.getKey();
+			Double IG = CalculateIG(word, p);
+			v.put(word, IG);
+		}
 		
 		List<Map.Entry<String, Double>> entries =
 				  new ArrayList<Map.Entry<String, Double>>(v.entrySet());
@@ -153,6 +153,30 @@ public class MNBclassification {
 			count++;
 		}
 		return sortedMap;
+	}
+	
+	private Double CalculateIG(String w, MNBprobability p) {
+		Double IG = 0.0;
+		
+		String[] classNames = Utilities.GetClassNames(DC);
+		for (String c : classNames) {
+			Double Pc = p.GetClassProbability(c);
+			if (Pc == 0.0) IG += 0;
+			else IG += (-1 * Pc * Math.log(Pc)/Math.log(2));
+		}
+		Double Pw = v.get(w)/DC_training.size();
+		for (String c : classNames) {
+			Double Pcw = p.GetWordProbability(w, c);
+			if (Pcw == 0.0) IG += 0;
+			else IG += (Pw * Pcw * Math.log(Pcw)/Math.log(2));
+		}
+		Double Pnw = 1-Pw;
+		for (String c : classNames) {
+			Double Pcnw = 1 - p.GetWordProbability(w, c);
+			if (Pcnw == 0.0) IG += 0;
+			else IG += (Pnw * Pcnw * Math.log(Pcnw)/Math.log(2));
+		}
+		return IG;
 	}
 //	
 ////	assigns most probable class for a particular doc
