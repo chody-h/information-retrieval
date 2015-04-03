@@ -6,6 +6,7 @@ import java.util.LinkedHashMap;
 import java.util.Map.Entry;
 
 import util.ClassProbabilities;
+import util.Utilities;
 import util.WordProbabilities;
 
 public class MNBprobability {	
@@ -19,8 +20,7 @@ public class MNBprobability {
 		HashMap<String, Double> classCounts = new HashMap<String, Double>();
 		for (Entry<File, LinkedHashMap<String, Integer>> entry : training_set.entrySet()) {
 			File doc = entry.getKey();
-			String className = doc.getParent();
-			className = className.substring(className.lastIndexOf("/") + 1, className.length());
+			String className = Utilities.GetClassFromFile(doc);
 //			LinkedHashMap<String, Integer> documentVector = entry.getValue();
 //			Double classCount = documentVector.size() + 0.0;
 			Double classCount = 1.0;
@@ -41,8 +41,7 @@ public class MNBprobability {
 			// get the file
 			File doc = entry.getKey();
 			// get the name of the class the file is classified in
-			String className = doc.getParent();
-			className = className.substring(className.lastIndexOf("/") + 1, className.length());
+			String className = Utilities.GetClassFromFile(doc);
 			// each word and its count
 			HashMap<String, Double> wordCountsByClass;
 			if (classes.containsKey(className))

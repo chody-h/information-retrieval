@@ -69,4 +69,10 @@ public class Utilities {
 			return new LinkedHashMap<String, Integer>();
 		}
 	}
+	
+	public static String GetClassFromFile(File f) {
+		String className = f.getParent();
+		className = className.substring(className.lastIndexOf("/") + 1, className.length());
+		return className;
+	}
 }
