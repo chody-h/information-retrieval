@@ -9,7 +9,7 @@ import util.Utilities;
 public class MNBevaluation {
 	MNBevaluation(){}
 	
-	public Double accuracyMeasure(LinkedHashMap<File, String> classifications) {
+	public static Double accuracyMeasure(LinkedHashMap<File, String> classifications) {
 		double numDocs = classifications.size();
 		double numCorrect = 0;
 		for (Entry<File, String> e : classifications.entrySet()) {

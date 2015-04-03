@@ -24,9 +24,9 @@ public class MNBclassification {
 	private int DC_size;
 	// complete vocabulary of DC: intially = <word, num_documents_it's_in>, then = <word, IG>
 	private LinkedHashMap<String, Double> v;
-	// storage of training document vectors sorted by class - <class, <word, count>>
+	// storage of training document vectors - <file, <word, count>>
 	private LinkedHashMap<File, LinkedHashMap<String, Integer>> DC_training;
-	// storage of test document vectors sorted by class - <class, <word, count>>
+	// storage of test document vectors - <file, <word, count>>
 	private LinkedHashMap<File, LinkedHashMap<String, Integer>> DC_test;
 	
 //	remove stopwords
@@ -47,6 +47,7 @@ public class MNBclassification {
 		Partition();
 		v = Utilities.GetVocab(DC_training_files);
 		DC_training = Utilities.GetDocumentVectors(DC_training_files);
+		DC_test = Utilities.GetDocumentVectors(DC_test_files);
 	}
 
 	// partition files into two subsets
@@ -176,13 +177,35 @@ public class MNBclassification {
 		}
 		return IG;
 	}
-//	
-////	assigns most probable class for a particular doc
-////	must use getWordProbability and getClassProbability
-////	returns the class that should be assigned to doc
-//	private void label(Document in test_set) {
-//		
-//	}
+	
+//	assigns most probable class for a particular doc
+//	must use getWordProbability and getClassProbability
+//	returns the class that should be assigned to doc
+	public String label(File f, LinkedHashMap<String, Integer> docVector, MNBprobability p) {
+		LinkedHashMap<String, Double> classScores = new LinkedHashMap<String, Double>();
+		String[] classNames = Utilities.GetClassNames(DC);
+		for (String c : classNames) {
+			double score = 1.0;
+			for (Entry<String, Integer> e : docVector.entrySet()) {
+				String w = e.getKey();
+				int tf = e.getValue();
+				double Pwc = p.GetWordProbability(w, c);
+				double multiplier = Math.log(Math.pow(Pwc, tf))/Math.log(2);
+				score *= multiplier;
+			}
+			classScores.put(c, score);
+		}
+
+		List<Map.Entry<String, Double>> entries =
+				  new ArrayList<Map.Entry<String, Double>>(v.entrySet());
+		Collections.sort(entries, new Comparator<Map.Entry<String, Double>>() {
+			public int compare(Map.Entry<String, Double> a, Map.Entry<String, Double> b){
+				return b.getValue().compareTo(a.getValue());
+			}
+		});
+		Map.Entry<String, Double> highestScore = entries.get(0);
+		return highestScore.getKey();
+	}
 	
 	public LinkedHashMap<String, Double> getVocab() {
 		return v;
