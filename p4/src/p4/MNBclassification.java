@@ -28,6 +28,8 @@ public class MNBclassification {
 	private LinkedHashMap<File, LinkedHashMap<String, Integer>> DC_training;
 	// storage of test document vectors - <file, <word, count>>
 	private LinkedHashMap<File, LinkedHashMap<String, Integer>> DC_test;
+	// feature selection narrowing
+	private LinkedHashMap<String, Double> featureSelect;
 	
 //	remove stopwords
 //	partition into two subsets, training & test
@@ -144,6 +146,7 @@ public class MNBclassification {
 			sortedMap.put(entry.getKey(), entry.getValue());
 			count++;
 		}
+		featureSelect = sortedMap;
 		return sortedMap;
 	}
 	
@@ -188,11 +191,14 @@ public class MNBclassification {
 			double score = 1.0;
 			for (Entry<String, Integer> e : docVector.entrySet()) {
 				String w = e.getKey();
+				// if the word isn't a selected feature, ignore it
+				if (!featureSelect.containsKey(w)) continue;
 				int tf = e.getValue();
 				double Pwc = p.GetWordProbability(w, c);
-				double multiplier = Math.pow(Pwc, tf);
-				multiplier = (multiplier == 0 || multiplier == 1) ? 1 : -1 * Math.log(multiplier)/Math.log(2);
-				score *= multiplier;
+				double component = Math.pow(Pwc, tf);
+				component = (component == 0) ? 0 : -1 * Math.log(component)/Math.log(2);
+				component = (component == 0) ? 1 : component;	// if this evaluates true, component was 1 before taking the log
+				score += component;
 			}
 			classScores.put(c, score);
 		}

@@ -31,7 +31,8 @@ public class Main {
 		
 		MNBprobability p = new MNBprobability(DC_training, vocab);
 		
-		LinkedHashMap<String, Double> features = c.featureSelection(100, p);
+		int featureCount = Integer.parseInt(args[1]);
+		LinkedHashMap<String, Double> features = c.featureSelection(featureCount, p);
 				// output stuff
 				amount = features.size();
 				if (amount > 100) amount = 100;
