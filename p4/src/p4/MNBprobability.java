@@ -159,6 +159,7 @@ public class MNBprobability {
 		return wp.GetProbability(w, c);
 	}
 	
+//	retrieves the probability of !word in class
 	public Double GetNotWordProbability(String w, String c) {
 		return wp.GetNotProbability(w, c);
 	}

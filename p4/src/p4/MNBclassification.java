@@ -44,11 +44,8 @@ public class MNBclassification {
 			DC_size += c.listFiles().length;
 		}
 		classes = classFiles.toArray(new File[classFiles.size()]);
-		
 		Partition();
-		
 		v = Utilities.GetVocab(DC_training_files);
-		
 		DC_training = Utilities.GetDocumentVectors(DC_training_files);
 	}
 
@@ -149,6 +146,7 @@ public class MNBclassification {
 		return sortedMap;
 	}
 	
+	// calculate the information gain for a single word (this is the nasty summation formula)
 	private Double CalculateIG(String w, MNBprobability p) {
 		int logBase = 2;
 		Double IG = 0.0;
