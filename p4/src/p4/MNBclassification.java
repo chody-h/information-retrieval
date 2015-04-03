@@ -48,18 +48,6 @@ public class MNBclassification {
 		Partition();
 		
 		v = Utilities.GetVocab(DC_training_files);
-		if (v.size() < 100) System.out.println("Vocab: " + v);
-		else {
-			System.out.printf("First 100 of %d features in the collection's vocab: {", v.size());
-			String delim = "";
-			int count = 0;
-			for (Entry<String, Double> entry : v.entrySet()) {
-				if (count++ == 100) break;
-				System.out.printf("%s%s=%2.2f", delim, entry.getKey(), entry.getValue());
-				delim = ", ";
-			}
-			System.out.println("}");
-		}
 		
 		DC_training = Utilities.GetDocumentVectors(DC_training_files);
 	}
@@ -168,23 +156,23 @@ public class MNBclassification {
 		String[] classNames = Utilities.GetClassNames(DC);
 		for (String c : classNames) {
 			Double Pc = p.GetClassProbability(c);
-if (w.equals("cheap")) System.out.printf("\tP(%s): %2.2f\n", c, Pc);
+//if (w.equals("cheap")) System.out.printf("\tP(%s): %2.2f\n", c, Pc);
 			if (Pc == 0.0) IG += 0;
 			else IG += (-1 * Pc * Math.log(Pc)/Math.log(logBase));
 		}
 		Double Pw = v.get(w)/DC_training.size();
-if (w.equals("cheap")) System.out.printf("\tP(%s): %2.2f\n", w, Pw);
+//if (w.equals("cheap")) System.out.printf("\tP(%s): %2.2f\n", w, Pw);
 		for (String c : classNames) {
 			Double Pcw = p.GetWordProbability(w, c);
-if (w.equals("cheap")) System.out.printf("\tP(%s|%s): %2.2f\n", c, w, Pcw);
+//if (w.equals("cheap")) System.out.printf("\tP(%s|%s): %2.2f\n", c, w, Pcw);
 			if (Pcw == 0.0) IG += 0;
 			else IG += (Pw * Pcw * Math.log(Pcw)/Math.log(logBase));
 		}
 		Double Pnw = 1-Pw;
-if (w.equals("cheap")) System.out.printf("\tP(!%s): %2.2f\n", w, Pnw);
+//if (w.equals("cheap")) System.out.printf("\tP(!%s): %2.2f\n", w, Pnw);
 		for (String c : classNames) {
 			Double Pcnw = p.GetNotWordProbability(w, c);
-if (w.equals("cheap")) System.out.printf("\tP(%s|!%s): %2.2f\n", c, w, Pcnw);
+//if (w.equals("cheap")) System.out.printf("\tP(%s|!%s): %2.2f\n", c, w, Pcnw);
 			if (Pcnw == 0.0) IG += 0;
 			else IG += (Pnw * Pcnw * Math.log(Pcnw)/Math.log(logBase));
 		}
