@@ -190,14 +190,15 @@ public class MNBclassification {
 				String w = e.getKey();
 				int tf = e.getValue();
 				double Pwc = p.GetWordProbability(w, c);
-				double multiplier = Math.log(Math.pow(Pwc, tf))/Math.log(2);
+				double multiplier = Math.pow(Pwc, tf);
+				multiplier = (multiplier == 0 || multiplier == 1) ? 1 : -1 * Math.log(multiplier)/Math.log(2);
 				score *= multiplier;
 			}
 			classScores.put(c, score);
 		}
 
 		List<Map.Entry<String, Double>> entries =
-				  new ArrayList<Map.Entry<String, Double>>(v.entrySet());
+				  new ArrayList<Map.Entry<String, Double>>(classScores.entrySet());
 		Collections.sort(entries, new Comparator<Map.Entry<String, Double>>() {
 			public int compare(Map.Entry<String, Double> a, Map.Entry<String, Double> b){
 				return b.getValue().compareTo(a.getValue());

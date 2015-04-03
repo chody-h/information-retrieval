@@ -43,6 +43,8 @@ public class Main {
 					System.out.printf("%s%s=%2.4f", delim, f.getKey(), f.getValue());
 					delim = ", ";
 				}
+				System.out.println("}");
+			
 		
 		
 		// testing
@@ -56,9 +58,9 @@ public class Main {
 			String assignedClass = c.label(f, docVector, p);
 			DC_test_assignments.put(f, assignedClass);
 		}
-		Double accuracy = MNBevaluation.accuracyMeasure(DC_test_assignments);
-		accuracy = accuracy * 100;
-		System.out.printf("My classifier is %2.2f%% accurate for the (%s) document collection.", accuracy, dc);
+		double accuracy = MNBevaluation.accuracyMeasure(DC_test_assignments);
+		accuracy = (accuracy >= 0 && accuracy <= 100) ? accuracy * 100 : 0 ;
+		System.out.printf("My classifier is %2.2f%% accurate for (%d) docs in the (%s) test set.", accuracy, DC_test.size(), dc);
 	}
 
 }
