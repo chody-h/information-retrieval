@@ -9,7 +9,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import textops.StopWords;
 import util.Utilities;
 
 public class MNBclassification {
@@ -29,8 +28,6 @@ public class MNBclassification {
 	private LinkedHashMap<File, LinkedHashMap<String, Integer>> DC_training;
 	// storage of test document vectors sorted by class - <class, <word, count>>
 	private LinkedHashMap<File, LinkedHashMap<String, Integer>> DC_test;
-	
-	private StopWords sw = new StopWords();
 	
 //	remove stopwords
 //	partition into two subsets, training & test
@@ -71,6 +68,7 @@ public class MNBclassification {
 	private void Partition() {
 		ArrayList<File> DCtraining = new ArrayList<File>();
 		ArrayList<File> DCtest = new ArrayList<File>();
+		// team assignment 3 data
 		if (DC.getName().equals("test")) {
 			for (File c : classes) {
 				File[] listings = c.listFiles();
@@ -82,12 +80,22 @@ public class MNBclassification {
 					else if (number == 7) {
 						DCtest.add(f);
 					}
-					else {
-						// extra files
+				}
+			}
+		}
+		// slide data
+		else if (DC.getName().equals("test2")) {
+			for (File c : classes) {
+				File[] listings = c.listFiles();
+				for (File f : listings) {
+					int number = Integer.parseInt(f.getName().split("\\.txt")[0]);
+					if (number <= 10) {
+						DCtraining.add(f);
 					}
 				}
 			}
 		}
+		// project data
 		else {
 			int training = (int) Math.floor(DC_size*0.8);
 			for (File c : classes) {
@@ -172,7 +180,7 @@ public class MNBclassification {
 		}
 		Double Pnw = 1-Pw;
 		for (String c : classNames) {
-			Double Pcnw = 1 - p.GetWordProbability(w, c);
+			Double Pcnw = p.GetNotWordProbability(w, c);
 			if (Pcnw == 0.0) IG += 0;
 			else IG += (Pnw * Pcnw * Math.log(Pcnw)/Math.log(2));
 		}

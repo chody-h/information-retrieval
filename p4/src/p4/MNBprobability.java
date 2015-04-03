@@ -34,55 +34,101 @@ public class MNBprobability {
 //	use Laplacian Smoothed Estimate (slide 16)
 //	return WordProbabilities: each word and its probability (hashmap?)
 	private WordProbabilities ComputeWordProbability(LinkedHashMap<File, LinkedHashMap<String, Integer>> training_set, LinkedHashMap<String, Double> vocab) {
-		// stores each word's count by class
-		HashMap<String, HashMap<String, Double>> classes = new HashMap<String, HashMap<String, Double>>();
+		// stores number of files each word is in by class
+		// <word, <class, count>>
+		LinkedHashMap<String, LinkedHashMap<String, Double>> wordcountbyclass = new LinkedHashMap<String, LinkedHashMap<String, Double>>();
+		// stores number of files word is not in by class
+		LinkedHashMap<String, LinkedHashMap<String, Double>> antiwordcountbyclass = new LinkedHashMap<String, LinkedHashMap<String, Double>>();
+		// stores number of files word is in
+		HashMap<String, Integer> wordcount = new HashMap<String, Integer>();
+		// stores number of files word is not in
+		HashMap<String, Integer> antiwordcount = new HashMap<String, Integer>();
+		
 		// iterate over every file
-		for (Entry<File, LinkedHashMap<String, Integer>> entry : training_set.entrySet()) {
+		for (Entry<File, LinkedHashMap<String, Integer>> document : training_set.entrySet()) {
 			// get the file
-			File doc = entry.getKey();
+			File doc = document.getKey();
 			// get the name of the class the file is classified in
 			String className = Utilities.GetClassFromFile(doc);
-			// each word and its count
-			HashMap<String, Double> wordCountsByClass;
-			if (classes.containsKey(className))
-				wordCountsByClass = classes.get(className);
-			else
-				 wordCountsByClass = new HashMap<String, Double>();
 			// each word in the document and its count
-			LinkedHashMap<String, Integer> documentvector = entry.getValue();
-			for (Entry<String, Integer> wordcounts : documentvector.entrySet()) {
-				String word = wordcounts.getKey();
-				Double count = wordcounts.getValue().doubleValue();
-				// add the current count to the total class count
-				if (wordCountsByClass.containsKey(word))
-					count += wordCountsByClass.get(word);
-				wordCountsByClass.put(word, count);
+			LinkedHashMap<String, Integer> documentvector = document.getValue();
+			// iterate through every word in the vocab
+			for (Entry<String, Double> component : vocab.entrySet()) {
+				String word = component.getKey();
+				LinkedHashMap<String, Double> temp;
+				Double num_files = 1.0;
+				// word is in document
+				if (documentvector.containsKey(word)) {
+					if (wordcountbyclass.containsKey(word)) {
+						temp = wordcountbyclass.get(word);
+						if (temp.containsKey(className)) {
+							num_files = temp.get(className) + 1.0;
+						}
+						else {
+							num_files = 1.0;
+						}
+					}
+					else {
+						temp = new LinkedHashMap<String, Double>();
+					}
+					temp.put(className, num_files);
+					wordcountbyclass.put(word, temp);
+					
+					if (wordcount.containsKey(word)) {
+						wordcount.put(word, wordcount.get(word)+1);
+					}
+					else {
+						wordcount.put(word, 1);
+					}
+				}
+				// word is not in document
+				else {
+					if (antiwordcountbyclass.containsKey(word)) {
+						temp = antiwordcountbyclass.get(word);
+						if (temp.containsKey(className)) {
+							num_files = temp.get(className) + 1.0;
+						}
+						else {
+							num_files = 1.0;
+						}
+					}
+					else {
+						temp = new LinkedHashMap<String, Double>();
+					}
+					temp.put(className, num_files);
+					antiwordcountbyclass.put(word, temp);
+					
+					if (antiwordcount.containsKey(word)) {
+						antiwordcount.put(word, antiwordcount.get(word)+1);
+					}
+					else {
+						antiwordcount.put(word, 1);
+					}
+				}
 			}
-			// update the class information
-			classes.put(className, wordCountsByClass);
 		}
 		
-		
-		for (Entry<String, HashMap<String, Double>> entry : classes.entrySet()) {
-			String className = entry.getKey();
-			int totalCount = 0;
-			HashMap<String, Double> wordCounts = entry.getValue();
-			for (Entry<String, Double> words : wordCounts.entrySet()) {
-//				String word = words.getKey();
-				Double count = words.getValue();
-				totalCount += count;
+		// iterate over every word to convert counts to probabilities
+		for (Entry<String, LinkedHashMap<String, Double>> e : wordcountbyclass.entrySet()) {
+			String word = e.getKey();
+			LinkedHashMap<String, Double> byclass = e.getValue();
+			for (Entry<String, Double> c : byclass.entrySet()) {
+				String className = c.getKey();
+				Double prob = c.getValue() / wordcount.get(word);
+				byclass.put(className, prob);
 			}
-			for (Entry<String, Double> words : vocab.entrySet()) {
-				String word = words.getKey();
-				Double count = 0.0;
-				if (wordCounts.containsKey(word)) count = wordCounts.get(word);
-				Double probability = (count + 1) / (totalCount + vocab.size());
-				wordCounts.put(word, probability);
+		}
+		for (Entry<String, LinkedHashMap<String, Double>> e : antiwordcountbyclass.entrySet()) {
+			String word = e.getKey();
+			LinkedHashMap<String, Double> byclass = e.getValue();
+			for (Entry<String, Double> c : byclass.entrySet()) {
+				String className = c.getKey();
+				Double prob = c.getValue() / antiwordcount.get(word);
+				byclass.put(className, prob);
 			}
-			classes.put(className, wordCounts);
 		}
 		
-		WordProbabilities ret = new WordProbabilities(classes);
+		WordProbabilities ret = new WordProbabilities(wordcountbyclass, antiwordcountbyclass);
 		return ret;
 	}
 	
@@ -110,7 +156,15 @@ public class MNBprobability {
 //	includes probability of words not seen while training
 //	returns probability of w in c stored in WordProbabilities
 	public Double GetWordProbability(String w, String c) {
-		return wp.GetProbability(w, c);
+		Double ret = wp.GetProbability(w, c);
+		if (ret == null) return 0.0;
+		else return ret;
+	}
+	
+	public Double GetNotWordProbability(String w, String c) {
+		Double ret = wp.GetNotProbability(w, c);
+		if (ret == null) return 0.0;
+		else return ret;
 	}
 	
 //	returns probability of c

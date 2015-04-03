@@ -13,7 +13,7 @@ public class Main {
 		LinkedHashMap<String, Double> vocab = c.getVocab();
 		MNBprobability p = new MNBprobability(DC_training, vocab);
 		
-		c.featureSelection(3, p);
+		System.out.println(c.featureSelection(3, p));
 	}
 
 }
