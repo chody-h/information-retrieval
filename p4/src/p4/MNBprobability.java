@@ -109,12 +109,12 @@ public class MNBprobability {
 //	retrieves probability of word in class
 //	includes probability of words not seen while training
 //	returns probability of w in c stored in WordProbabilities
-	private Double GetWordProbability(String w, String c) {
+	public Double GetWordProbability(String w, String c) {
 		return wp.GetProbability(w, c);
 	}
 	
 //	returns probability of c
-	private Double GetClassProbability(String c) {
+	public Double GetClassProbability(String c) {
 		return cp.GetProbability(c);
 	}
 }

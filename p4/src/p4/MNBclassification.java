@@ -3,7 +3,11 @@ package p4;
 import java.io.File;
 import java.io.FilenameFilter;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.Map.Entry;
 
 import textops.StopWords;
@@ -126,12 +130,30 @@ public class MNBclassification {
 //		}
 	}
 	
-////	determine which words to represent documents in training&test set based on IG
-////	if M >= size of vocab, apply no feature selection
-////	return selectedFeatures
-//	private void featureSelection(DCtraining, M>=1) {
-//		
-//	}
+//	determine which words to represent documents in training&test set based on IG
+//	if M >= size of vocab, apply no feature selection
+//	return selectedFeatures
+	public LinkedHashMap<String, Double> featureSelection(int M) {
+		if (M >= v.size()) return v;
+		
+		List<Map.Entry<String, Double>> entries =
+				  new ArrayList<Map.Entry<String, Double>>(v.entrySet());
+		Collections.sort(entries, new Comparator<Map.Entry<String, Double>>() {
+			public int compare(Map.Entry<String, Double> a, Map.Entry<String, Double> b){
+				return a.getValue().compareTo(b.getValue());
+			}
+		});
+		LinkedHashMap<String, Double> sortedMap = new LinkedHashMap<String, Double>();
+		int count = 0;
+		for (Map.Entry<String, Double> entry : entries) {
+			if (count > M) {
+				break;
+			}
+			sortedMap.put(entry.getKey(), entry.getValue());
+			count++;
+		}
+		return sortedMap;
+	}
 //	
 ////	assigns most probable class for a particular doc
 ////	must use getWordProbability and getClassProbability
