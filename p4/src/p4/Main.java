@@ -12,6 +12,7 @@ public class Main {
 
 		
 		// training
+		double trainTime = System.nanoTime();
 		MNBclassification c = new MNBclassification(dc);
 		
 		LinkedHashMap<File, LinkedHashMap<String, Integer>> DC_training = c.getDCTraining();
@@ -30,10 +31,17 @@ public class Main {
 				System.out.println("}");
 		
 		MNBprobability p = new MNBprobability(DC_training, vocab, new File(dc));
+		trainTime = System.nanoTime() - trainTime;
+		double time = (double) trainTime;
+		System.out.printf("Training took %2.4f seconds.\n", time/10E8);
 		
+		double featureTime = System.nanoTime();
 		int featureCount = Integer.parseInt(args[1]);
 		LinkedHashMap<String, Double> features = c.featureSelection(featureCount, p);
 				// output stuff
+				featureTime = System.nanoTime() - featureTime;
+				time = (double) featureTime;
+				System.out.printf("Feature selection took %2.4f seconds.\n", time/10E8);
 				amount = features.size();
 				if (amount > 100) amount = 100;
 				System.out.printf("Top %d of %d features ranked by Information Gain: \n\t{", amount, features.size());
@@ -49,6 +57,7 @@ public class Main {
 		
 		
 		// testing
+		double testTime = System.nanoTime();
 		// document vectors
 		LinkedHashMap<File, LinkedHashMap<String, Integer>> DC_test = c.getDCTest();
 		// document classification
@@ -61,6 +70,9 @@ public class Main {
 		}
 		double accuracy = MNBevaluation.accuracyMeasure(DC_test_assignments);
 		accuracy = (accuracy >= 0 && accuracy <= 100) ? accuracy * 100 : 0 ;
+		testTime = System.nanoTime() - testTime;
+		time = (double) testTime;
+		System.out.printf("Testing took %2.4f seconds.\n", time/10E8);
 		System.out.printf("My classifier is %2.2f%% accurate for (%d) docs in the (%s) test set.", accuracy, DC_test.size(), dc);
 	}
 
