@@ -158,7 +158,7 @@ public class MNBclassification {
 		String[] classNames = Utilities.GetClassNames(DC);
 		for (String c : classNames) {
 			Double Pc = p.GetClassProbability(c);
-if (w.equals("cheap")) System.out.printf("\tP(%s): %2.2f\n", c, Pc);
+//if (w.equals("cheap")) System.out.printf("\tP(%s): %2.2f\n", c, Pc);
 			if (Pc == 0.0) IG += 0;
 			else IG += (-1 * Pc * Math.log(Pc)/Math.log(logBase));
 		}
@@ -195,8 +195,8 @@ if (w.equals("cheap")) System.out.printf("\tP(%s): %2.2f\n", c, Pc);
 				if (!featureSelect.containsKey(w)) continue;
 				int tf = e.getValue();
 				double Pwc = p.GetLaplacianProbability(w, c);
-				double multiplier = Math.pow(Pwc, tf);
-				score *= multiplier;
+				double addition = Math.log(Pwc)/Math.log(2)*tf;
+				score += addition;
 			}
 			classScores.put(c, score);
 		}
