@@ -2,6 +2,7 @@ package p4;
 
 import java.io.File;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.Map.Entry;
 
@@ -14,8 +15,8 @@ public class MNBprobability {
 	private WordProbabilities wp;
 	private ClassProbabilities cp;
 	
-	MNBprobability(LinkedHashMap<File, LinkedHashMap<String, Integer>> training_set, LinkedHashMap<String, Double> vocab) {
-		wp = ComputeWordProbability(training_set, vocab);
+	MNBprobability(LinkedHashMap<File, LinkedHashMap<String, Integer>> training_set, LinkedHashMap<String, Double> vocab, File DC) {
+		wp = ComputeWordProbability(training_set, vocab, DC);
 		
 		HashMap<String, Double> classCounts = new HashMap<String, Double>();
 		for (Entry<File, LinkedHashMap<String, Integer>> entry : training_set.entrySet()) {
@@ -33,7 +34,7 @@ public class MNBprobability {
 //	compute probability of each word in each class using training set
 //	use Laplacian Smoothed Estimate (slide 16)
 //	return WordProbabilities: each word and its probability (hashmap?)
-	private WordProbabilities ComputeWordProbability(LinkedHashMap<File, LinkedHashMap<String, Integer>> training_set, LinkedHashMap<String, Double> vocab) {
+	private WordProbabilities ComputeWordProbability(LinkedHashMap<File, LinkedHashMap<String, Integer>> training_set, LinkedHashMap<String, Double> vocab, File DC) {
 		
 /******************** COMPUTE P(C|W) **********************/
 /*************** FOR IG CALCULATIONS ONLY *****************/
@@ -134,10 +135,47 @@ public class MNBprobability {
 		
 /******************** COMPUTE P(W|C) **********************/
 /************ FOR LAPLACIAN CALCULATIONS ONLY *************/
-		LinkedHashMap<String, Double> laplacian = new LinkedHashMap<String, Double>();
+		LinkedHashMap<String, LinkedHashMap<String, Double>> laplacian = new LinkedHashMap<String, LinkedHashMap<String, Double>>();
+		String[] classes = Utilities.GetClassNames(DC);
+		for (String c : classes) {
+			LinkedHashMap<String, Double> wordCountsInClass = new LinkedHashMap<String, Double>();
+			for (Entry<File, LinkedHashMap<String, Integer>> e : training_set.entrySet()) {
+				File f = e.getKey();
+				String currentClass = Utilities.GetClassFromFile(f);
+				if (!c.equals(currentClass)) continue;
+				LinkedHashMap<String, Integer> docVector = e.getValue();
+				for (Entry<String, Integer> term : docVector.entrySet()) {
+					String w = term.getKey();
+					double wordCount = term.getValue();
+					if (wordCountsInClass.containsKey(w)) {
+						wordCount += wordCountsInClass.get(w);
+					}
+					wordCountsInClass.put(w, wordCount);
+				}
+			}
+			laplacian.put(c, wordCountsInClass);
+		}
+		
+		// iterate over every class & word to convert from counts to probabilities
+		for (Entry<String, LinkedHashMap<String, Double>> e : laplacian.entrySet()) {
+//			String c = e.getKey();
+			LinkedHashMap<String, Double> words = e.getValue();
+			int numWordsInClass = 0;
+			for (Entry<String, Double> eachWord: words.entrySet()) {
+				numWordsInClass += eachWord.getValue();
+			}
+			for (Entry<String, Double> eachWord : words.entrySet()) {
+				String w = eachWord.getKey();
+				double prob = (eachWord.getValue() + 1) / (numWordsInClass + vocab.size());
+				words.put(w, prob);
+			}
+		}
 		
 		
-		WordProbabilities ret = new WordProbabilities(wordcountbyclass, antiwordcountbyclass);
+		
+		
+		
+		WordProbabilities ret = new WordProbabilities(wordcountbyclass, antiwordcountbyclass, laplacian);
 		return ret;
 	}
 	
@@ -164,17 +202,22 @@ public class MNBprobability {
 //	retrieves probability of word in class
 //	includes probability of words not seen while training
 //	returns probability of w in c stored in WordProbabilities
-	public Double GetWordProbability(String w, String c) {
-		return wp.GetProbability(w, c);
+	public Double GetWordProbability(String c, String w) {
+		return wp.GetWordProbability(c, w);
 	}
 	
 //	retrieves the probability of !word in class
-	public Double GetNotWordProbability(String w, String c) {
-		return wp.GetNotProbability(w, c);
+	public Double GetNotWordProbability(String c, String w) {
+		return wp.GetNotWordProbability(c, w);
 	}
 	
 //	returns probability of c
 	public Double GetClassProbability(String c) {
 		return cp.GetProbability(c);
+	}
+	
+//	returns the laplacian probability of w and c (P(w|c))
+	public Double GetLaplacianProbability(String w, String c) {
+		return wp.GetLaplacianProbability(w, c);
 	}
 }

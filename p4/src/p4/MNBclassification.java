@@ -158,14 +158,14 @@ public class MNBclassification {
 		String[] classNames = Utilities.GetClassNames(DC);
 		for (String c : classNames) {
 			Double Pc = p.GetClassProbability(c);
-//if (w.equals("cheap")) System.out.printf("\tP(%s): %2.2f\n", c, Pc);
+if (w.equals("cheap")) System.out.printf("\tP(%s): %2.2f\n", c, Pc);
 			if (Pc == 0.0) IG += 0;
 			else IG += (-1 * Pc * Math.log(Pc)/Math.log(logBase));
 		}
 		Double Pw = v.get(w)/DC_training.size();
 //if (w.equals("cheap")) System.out.printf("\tP(%s): %2.2f\n", w, Pw);
 		for (String c : classNames) {
-			Double Pcw = p.GetWordProbability(w, c);
+			Double Pcw = p.GetWordProbability(c, w);
 //if (w.equals("cheap")) System.out.printf("\tP(%s|%s): %2.2f\n", c, w, Pcw);
 			if (Pcw == 0.0) IG += 0;
 			else IG += (Pw * Pcw * Math.log(Pcw)/Math.log(logBase));
@@ -173,7 +173,7 @@ public class MNBclassification {
 		Double Pnw = 1-Pw;
 //if (w.equals("cheap")) System.out.printf("\tP(!%s): %2.2f\n", w, Pnw);
 		for (String c : classNames) {
-			Double Pcnw = p.GetNotWordProbability(w, c);
+			Double Pcnw = p.GetNotWordProbability(c, w);
 //if (w.equals("cheap")) System.out.printf("\tP(%s|!%s): %2.2f\n", c, w, Pcnw);
 			if (Pcnw == 0.0) IG += 0;
 			else IG += (Pnw * Pcnw * Math.log(Pcnw)/Math.log(logBase));
@@ -194,11 +194,9 @@ public class MNBclassification {
 				// if the word isn't a selected feature, ignore it
 				if (!featureSelect.containsKey(w)) continue;
 				int tf = e.getValue();
-				double Pwc = p.GetWordProbability(w, c);
-				double component = (Pwc == 0) ? 0 : -1 * Math.log(Pwc)/Math.log(2);
-				component = (component == 0) ? 1 : component;	// if this evaluates true, component was 1 before taking the log
-				component = Math.pow(component, tf);
-				score += component;
+				double Pwc = p.GetLaplacianProbability(w, c);
+				double multiplier = Math.pow(Pwc, tf);
+				score *= multiplier;
 			}
 			classScores.put(c, score);
 		}

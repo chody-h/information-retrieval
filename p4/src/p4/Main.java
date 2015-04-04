@@ -29,7 +29,7 @@ public class Main {
 				}
 				System.out.println("}");
 		
-		MNBprobability p = new MNBprobability(DC_training, vocab);
+		MNBprobability p = new MNBprobability(DC_training, vocab, new File(dc));
 		
 		int featureCount = Integer.parseInt(args[1]);
 		LinkedHashMap<String, Double> features = c.featureSelection(featureCount, p);
