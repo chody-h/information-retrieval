@@ -164,9 +164,10 @@ public class MNBprobability {
 			for (Entry<String, Double> eachWord: words.entrySet()) {
 				numWordsInClass += eachWord.getValue();
 			}
-			for (Entry<String, Double> eachWord : words.entrySet()) {
+			for (Entry<String, Double> eachWord : vocab.entrySet()) {
 				String w = eachWord.getKey();
-				double prob = (eachWord.getValue() + 1) / (numWordsInClass + vocab.size());
+				Double val = (!words.containsKey(w)) ? 0.0 : words.get(w);
+				double prob = (val + 1) / (numWordsInClass + vocab.size());
 				words.put(w, prob);
 			}
 		}

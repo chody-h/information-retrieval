@@ -205,7 +205,8 @@ if (w.equals("cheap")) System.out.printf("\tP(%s): %2.2f\n", c, Pc);
 				  new ArrayList<Map.Entry<String, Double>>(classScores.entrySet());
 		Collections.sort(entries, new Comparator<Map.Entry<String, Double>>() {
 			public int compare(Map.Entry<String, Double> a, Map.Entry<String, Double> b){
-				return a.getValue().compareTo(b.getValue());
+				// sort largest to smallest
+				return b.getValue().compareTo(a.getValue());
 			}
 		});
 		Map.Entry<String, Double> highestScore = entries.get(0);
