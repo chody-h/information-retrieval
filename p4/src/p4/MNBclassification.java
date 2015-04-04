@@ -195,9 +195,9 @@ public class MNBclassification {
 				if (!featureSelect.containsKey(w)) continue;
 				int tf = e.getValue();
 				double Pwc = p.GetWordProbability(w, c);
-				double component = Math.pow(Pwc, tf);
-				component = (component == 0) ? 0 : -1 * Math.log(component)/Math.log(2);
+				double component = (Pwc == 0) ? 0 : -1 * Math.log(Pwc)/Math.log(2);
 				component = (component == 0) ? 1 : component;	// if this evaluates true, component was 1 before taking the log
+				component = Math.pow(component, tf);
 				score += component;
 			}
 			classScores.put(c, score);
@@ -207,7 +207,7 @@ public class MNBclassification {
 				  new ArrayList<Map.Entry<String, Double>>(classScores.entrySet());
 		Collections.sort(entries, new Comparator<Map.Entry<String, Double>>() {
 			public int compare(Map.Entry<String, Double> a, Map.Entry<String, Double> b){
-				return b.getValue().compareTo(a.getValue());
+				return a.getValue().compareTo(b.getValue());
 			}
 		});
 		Map.Entry<String, Double> highestScore = entries.get(0);

@@ -34,6 +34,10 @@ public class MNBprobability {
 //	use Laplacian Smoothed Estimate (slide 16)
 //	return WordProbabilities: each word and its probability (hashmap?)
 	private WordProbabilities ComputeWordProbability(LinkedHashMap<File, LinkedHashMap<String, Integer>> training_set, LinkedHashMap<String, Double> vocab) {
+		
+/******************** COMPUTE P(C|W) **********************/
+/*************** FOR IG CALCULATIONS ONLY *****************/
+		
 		// stores number of files each word is in by class
 		// <word, <class, count>>
 		LinkedHashMap<String, LinkedHashMap<String, Double>> wordcountbyclass = new LinkedHashMap<String, LinkedHashMap<String, Double>>();
@@ -127,6 +131,11 @@ public class MNBprobability {
 				byclass.put(className, prob);
 			}
 		}
+		
+/******************** COMPUTE P(W|C) **********************/
+/************ FOR LAPLACIAN CALCULATIONS ONLY *************/
+		LinkedHashMap<String, Double> laplacian = new LinkedHashMap<String, Double>();
+		
 		
 		WordProbabilities ret = new WordProbabilities(wordcountbyclass, antiwordcountbyclass);
 		return ret;
