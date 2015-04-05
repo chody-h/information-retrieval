@@ -1,5 +1,6 @@
 package p4;
 
+import java.awt.Toolkit;
 import java.io.File;
 import java.util.LinkedHashMap;
 import java.util.Map.Entry;
@@ -74,6 +75,8 @@ public class Main {
 		time = (double) testTime;
 		System.out.printf("Testing took %2.4f seconds.\n", time/10E8);
 		System.out.printf("My classifier is %2.2f%% accurate for (%d) docs in the (%s) test set.", accuracy, DC_test.size(), dc);
+
+//		Toolkit.getDefaultToolkit().beep();
 	}
 
 }
