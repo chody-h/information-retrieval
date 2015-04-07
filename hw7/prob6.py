@@ -8,7 +8,7 @@ from math import sqrt
 files = ["01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11"]
 doc_vectors = {}
 vocab = OrderedDict()
-groups = {"01": {"01": None}, "04": {"04": None}, "07": {"07": None}}
+groups = {"01": "{"01": None}", "04": {"04": None}, "07": {"07": None}}
 centroids = {}
 
 def ComputeCosineSimilarity(c, d):
@@ -104,6 +104,8 @@ while RecomputeCentroids():
 
 	for group in groups:
 		print group, groups[group]
+
+print "Convergence achieved."
 
 # for doc_vector in doc_vectors:
 # 	print doc_vector, doc_vectors[doc_vector]
