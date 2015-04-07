@@ -2,9 +2,9 @@ from collections import OrderedDict
 from math import pow
 from math import sqrt
 
-def ComputeCosineSimilarity(doc1, doc2):
-	v1 = doc_vectors[doc1]
-	v2 = doc_vectors[doc2]
+def ComputeCosineSimilarity(c, d):
+	v1 = doc_vectors[d]
+	v2 = centroids[c]
 
 	dotprod = 0
 	v1len = 0
@@ -15,10 +15,18 @@ def ComputeCosineSimilarity(doc1, doc2):
 		v2len += pow(v2[word], 2)
 	return dotprod/(sqrt(v1len * v2len))
 
+def RecomputeCentroids():
+	for groupname in groups:
+		centroid_vector = centroids[groupname]
+		for idx in centroid_vector:
+			for members in groups[groupname]:
+				
+
 files = ["01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11"]
 doc_vectors = {}
 vocab = OrderedDict()
 groups = {"01": {"01": None}, "04": {"04": None}, "07": {"07": None}}
+centroids = {}
 
 # load vocabulary
 for fname in files:
@@ -38,31 +46,23 @@ for fname in files:
 			doc_vector[word] = 0
 	doc_vectors[fname] = doc_vector
 
-# compute cosine similarity to categorize each file
+# initialize centroids
+for groupnames in groups:
+	centroids[groupnames] = doc_vectors[groupnames]
+
+# compute cosine similarity to categorize each file for the first time
 for fname in files:
-	print "fname: ", fname
 	closestgroup = (float("inf"), None)
 	if fname != "01" and fname != "04" and fname != "07":
 		for groupname in groups:
-			print "groupname: ", groupname
-			setobjects = groups[groupname]
-			print "setobjects: ", setobjects
-			maxdist = (0, None)
-			for docname in setobjects:
-				print "docname: ", docname
-				similarity = ComputeCosineSimilarity(fname, docname)
-				print "similarity: ", similarity
-				dist = 1 - similarity
-				print "dist: ", dist
-				if dist > maxdist[0]:
-					maxdist = (dist, docname)
-					print "maxdist: ", maxdist
-			if maxdist[0] < closestgroup[0]:
-				closestgroup = (maxdist[0], groupname)
-				print "closestgroup: ", closestgroup
-		print "fname, closestgroup: ", fname, closestgroup
-		break
+			similarity = ComputeCosineSimilarity(d=fname, c=groupname)
+			dist = 1 - similarity
+			if dist < closestgroup[0]:
+				closestgroup = (dist, groupname)
+		groups[closestgroup[1]][fname] = None
 
+for group in groups:
+	print group, groups[group]
 
 # for doc_vector in doc_vectors:
 # 	print doc_vector, doc_vectors[doc_vector]
