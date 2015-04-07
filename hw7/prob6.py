@@ -62,7 +62,7 @@ for fname in files:
 
 # initialize centroids
 for groupnames in groups:
-	centroids[groupnames] = doc_vectors[groupnames]
+	centroids[groupnames] = dict(doc_vectors[groupnames])
 
 # compute cosine similarity to categorize each file for the first time
 for fname in files:
@@ -82,8 +82,8 @@ count = 0
 while RecomputeCentroids():
 	count = count + 1
 	print "\n", count
-	for centroid_vector in centroids:
-		print centroid_vector, centroids[centroid_vector]
+
+	# compute cosine similarity to categorize each file for the first time
 
 for group in groups:
 	print group, groups[group]
