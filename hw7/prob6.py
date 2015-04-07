@@ -73,20 +73,37 @@ for fname in files:
 			dist = 1 - similarity
 			if dist < closestgroup[0]:
 				closestgroup = (dist, groupname)
+			# print fname, dist, groupname
 		groups[closestgroup[1]][fname] = None
 
+print "Starting groups"
 for group in groups:
 	print group, groups[group]
 
 count = 0
 while RecomputeCentroids():
 	count = count + 1
-	print "\n", count
+	print "\nIteration", count
 
-	# compute cosine similarity to categorize each file for the first time
+	# compute cosine similarity to categorize each file
+	for fname in files:
+		closestgroup = (float("inf"), None)
+		if fname != "01" and fname != "04" and fname != "07":
+			for groupname in groups:
+				similarity = ComputeCosineSimilarity(d=fname, c=groupname)
+				dist = 1-similarity
+				if dist < closestgroup[0]:
+					closestgroup = (dist, groupname)
+				# print fname, dist, groupname
+			for groupname in groups:
+				try:
+					del groups[groupname][fname]
+				except KeyError:
+					pass
+			groups[closestgroup[1]][fname] = None
 
-for group in groups:
-	print group, groups[group]
+	for group in groups:
+		print group, groups[group]
 
 # for doc_vector in doc_vectors:
 # 	print doc_vector, doc_vectors[doc_vector]
