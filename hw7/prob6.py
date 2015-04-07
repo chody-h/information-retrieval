@@ -1,6 +1,15 @@
+
+from __future__ import division
 from collections import OrderedDict
 from math import pow
 from math import sqrt
+# from math import abs
+
+files = ["01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11"]
+doc_vectors = {}
+vocab = OrderedDict()
+groups = {"01": {"01": None}, "04": {"04": None}, "07": {"07": None}}
+centroids = {}
 
 def ComputeCosineSimilarity(c, d):
 	v1 = doc_vectors[d]
@@ -15,18 +24,23 @@ def ComputeCosineSimilarity(c, d):
 		v2len += pow(v2[word], 2)
 	return dotprod/(sqrt(v1len * v2len))
 
+# returns whether or not the centroids changed
 def RecomputeCentroids():
+	changed = False
 	for groupname in groups:
 		centroid_vector = centroids[groupname]
-		for idx in centroid_vector:
-			for members in groups[groupname]:
-				
-
-files = ["01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11"]
-doc_vectors = {}
-vocab = OrderedDict()
-groups = {"01": {"01": None}, "04": {"04": None}, "07": {"07": None}}
-centroids = {}
+		copy = dict(centroid_vector)
+		for word in centroid_vector:
+			avg_of_word = 0
+			for doc_name in groups[groupname]:
+				avg_of_word += doc_vectors[doc_name][word]
+			avg = avg_of_word / float(len(groups[groupname]))
+			centroid_vector[word] = avg
+		for word in centroid_vector:
+			if abs(copy[word] - centroid_vector[word]) > 0.01:
+				changed = True
+				break
+	return changed
 
 # load vocabulary
 for fname in files:
@@ -60,6 +74,16 @@ for fname in files:
 			if dist < closestgroup[0]:
 				closestgroup = (dist, groupname)
 		groups[closestgroup[1]][fname] = None
+
+for group in groups:
+	print group, groups[group]
+
+count = 0
+while RecomputeCentroids():
+	count = count + 1
+	print "\n", count
+	for centroid_vector in centroids:
+		print centroid_vector, centroids[centroid_vector]
 
 for group in groups:
 	print group, groups[group]
